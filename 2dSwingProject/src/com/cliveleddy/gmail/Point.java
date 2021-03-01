@@ -1,7 +1,7 @@
 /**
  * 
  */
-package se.miun.studentid.dt187g.clle1101;
+package com.cliveleddy.gmail;
 
 /**
  * <h1>Class Point</h1>
@@ -10,7 +10,7 @@ package se.miun.studentid.dt187g.clle1101;
  * <p>
  * Example: "Point (1,0,1,0)"
  * 
- * @author Clive Leddy (clle1101)
+ * @author Clive Leddy
  * @version 1.0
  */
 public class Point {

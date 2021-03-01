@@ -1,4 +1,4 @@
-package se.miun.studentid.dt187g.clle1101;
+package com.cliveleddy.gmail;
 
 /**
  * <h1>Interface Drawable</h1>
@@ -6,7 +6,7 @@ package se.miun.studentid.dt187g.clle1101;
  * <p>
  * Example: "Drawing a blue rectangle!"
  * 
- * @author Clive Leddy (clle1101)
+ * @author Clive Leddy
  * @version 1.0
  */
 public interface IDrawable {

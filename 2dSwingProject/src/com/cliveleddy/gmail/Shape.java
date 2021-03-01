@@ -1,4 +1,4 @@
-package se.miun.studentid.dt187g.clle1101;
+package com.cliveleddy.gmail;
 
 /**
  * <h1>Class Shape</h1>
@@ -7,7 +7,7 @@ package se.miun.studentid.dt187g.clle1101;
  * <p>
  * Example: "Create a circle or rectangle."
  * 
- * @author Clive Leddy (clle1101)
+ * @author Clive Leddy
  * @version 1.0
  */
 public abstract class Shape implements IDrawable {

@@ -1,4 +1,4 @@
-package se.miun.studentid.dt187g.clle1101;
+package com.cliveleddy.gmail;
 
 /**
 * <h1>Assignment 1</h1>
@@ -10,10 +10,10 @@ package se.miun.studentid.dt187g.clle1101;
 * user friendly and it is assumed as a high quality code.
 * 
 *
-* @author Clive Leddy (clle1101)11
+* @author Clive Leddy
 * @version 1.0
 */
-public class Assignment1 {
+public class Step1 {
 
 	public static void main(String[] args) {
 		testRectangle();

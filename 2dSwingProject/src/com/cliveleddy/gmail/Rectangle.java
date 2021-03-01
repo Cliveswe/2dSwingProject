@@ -1,4 +1,4 @@
-package se.miun.studentid.dt187g.clle1101;
+package com.cliveleddy.gmail;
 
 import java.awt.Graphics;
 
@@ -6,7 +6,7 @@ import java.awt.Graphics;
  * <h1>Class Rectangle</h1>
  * This class represents a rectangle. It extends the abstract class Shape.
  * 
- * @author Clive Leddy (clle1101)
+ * @author Clive Leddy
  * @version 1.0
  */
 public class Rectangle extends Shape {
