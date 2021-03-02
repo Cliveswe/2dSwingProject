@@ -6,12 +6,9 @@ import java.awt.Graphics;
 /**
  * <h1>Class Rectangle</h1>
  * This class represents a Circle. It extends the abstract class Shape.
- * <p>
- * <h2>Updates for Collection</h2>
- * Change the call to variable points from and array of Point to an ArrayList of type Point.
  * 
  * @author Clive Leddy
- * @version 2.0
+ * @version 1.0
  */
 public class Circle extends Shape{
 
@@ -28,8 +25,8 @@ public class Circle extends Shape{
 	}
 
 	public double getRadius() {
-		if(points.get(1) != null) {
-			return calculateRadius(points.get(0).get_x(), points.get(0).get_y(), points.get(1).get_x(), points.get(1).get_y());
+		if(points[1] != null) {
+			return calculateRadius(points[0].get_x(), points[0].get_y(), points[1].get_x(), points[1].get_y());
 		}
 		return -1;
 	}
@@ -58,9 +55,6 @@ public class Circle extends Shape{
 
 	}
 
-	/**
-	 * Render the circle to standard out.
-	 */
 	@Override
 	public void draw() {
 		System.out.print(toString());
@@ -115,10 +109,10 @@ public class Circle extends Shape{
 		String radius_NA = String.format("Radius=%s", na);
 
 		//start point
-		res += points.get(0) != null ? String.format("start=%.1f, %.1f", points.get(0).get_x(), points.get(0).get_y()) : startP_NA;
+		res += points[0] != null ? String.format("start=%.1f, %.1f", points[0].get_x(), points[0].get_y()) : startP_NA;
 		res += del;
 		//end point
-		res += points.get(1) != null ? String.format("end=%.1f, %.1f", points.get(1).get_x(), points.get(1).get_y()) : endP_NA;
+		res += points[1] != null ? String.format("end=%.1f, %.1f", points[1].get_x(), points[1].get_y()) : endP_NA;
 		res += del;
 		//get radius
 		res += getRadius() != -1 ?  String.format("radius=%.1f", getRadius()): radius_NA;
@@ -129,6 +123,5 @@ public class Circle extends Shape{
 
 		return res;
 	}
-
 
 }
