@@ -1,7 +1,7 @@
 package com.cliveleddy.gmail;
 
 /**
- * <h1>Assignment 1</h1>
+ * <h1>Step 1</h1>
  * This application creates different shapes and calls various
  * methods to print circumference, print area and draw the 
  * shapes to the standard output.
