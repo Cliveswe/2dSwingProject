@@ -1,7 +1,5 @@
 package com.cliveleddy.gmail;
 
-import java.util.ArrayList;
-
 /**
  * <h1>Class Shape</h1>
  * This is a base class that is used to describe different geometric figures.
@@ -9,20 +7,14 @@ import java.util.ArrayList;
  * <p>
  * Example: "Create a circle or rectangle."
  * 
- *  <h2>Updates for assignment 2</h2>
- * Change the variable points from and array of Point to an ArrayList of type Point.
- * Remember to refactor the constructors and the overloaded methods addPoint.
-
  * @author Clive Leddy
- * @version 2.0
+ * @version 1.0
  */
 public abstract class Shape implements IDrawable {
 
-
 	//class variables
 	protected String color;//shape colour.
-	//a list of coordinates to draw the shape.
-	protected ArrayList<Point> points;
+	protected Point[] points;//a list of coordinates to draw the shape.
 
 	/**
 	 * Point p is the starting point for a shape of colour color.
@@ -32,10 +24,9 @@ public abstract class Shape implements IDrawable {
 	public Shape(Point p, String color) {
 		super();
 		this.color = color;
-		//create an ArrayList object
-		points = new ArrayList<Point>();
-		points.add(0, p);
-		points.add(1, null);
+		points = new Point[2];
+		points[0] = p;
+		points[1] = null;
 	}
 
 	/**
@@ -48,10 +39,9 @@ public abstract class Shape implements IDrawable {
 	public Shape(double x, double y, String color) {
 		super();
 		this.color = color;
-		points = new ArrayList<Point>();//create an ArrayList object
-		points.add(0, new Point(x,y));
-		points.add(1, null);
-
+		points = new Point[2];
+		points[0] = new Point(x,y);
+		points[1] = null;
 	}
 
 	/**
@@ -87,17 +77,16 @@ public abstract class Shape implements IDrawable {
 	 * @param p object point.
 	 */
 	public void addPoint(Point p) {
-		//this.points[1] = p;
-		this.points.set(1, p);
+		this.points[1] = p;
 	}
-
+	
 	/**
 	 * Add the end point to the array of points with the given coordinates.
 	 * @param x coordinate of a point as a double.
 	 * @param y coordinate of a point as a double.
 	 */
 	public void addPoint(double x, double y) {
-		//this.points[1] = new Point(x, y);
-		this.points.set(1, new Point(x,y));
-	}	
+		this.points[1] = new Point(x, y);
+	}
+	
 }

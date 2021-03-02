@@ -6,13 +6,11 @@ import java.awt.Graphics;
  * <h1>Class Rectangle</h1>
  * This class represents a rectangle. It extends the abstract class Shape.
  * 
- * <h2>Updates for Collection</h2>
- * Change the call to variable points from and array of Point to an ArrayList of type Point.
-
  * @author Clive Leddy
- * @version 2.0
+ * @version 1.0
  */
 public class Rectangle extends Shape {
+
 	/**
 	 * Create a rectangle.
 	 * @param startPoint upper left point as an object Point.
@@ -35,7 +33,7 @@ public class Rectangle extends Shape {
 	 * @return height as a double, -1 if the second Point is not defined.
 	 */
 	double getHeight() {
-		if(points.get(1) != null) {
+		if(points[1] != null) {
 			return Math.abs(calculateHeight());
 		}
 		return -1;
@@ -49,11 +47,11 @@ public class Rectangle extends Shape {
 	private double calculateHeight() {
 		//transpose the y coordinates to the positive quadrant if the y value
 		//of the end point is negative.		
-		if(points.get(1).get_y() < 0) {
-			return Math.abs(points.get(1).get_y()) + points.get(0).get_y();
+		if(points[1].get_y() < 0) {
+			return Math.abs(points[1].get_y()) + points[0].get_y();
 		}
 
-		return points.get(1).get_y()-points.get(0).get_y();
+		return points[1].get_y()-points[0].get_y();
 	}
 
 	/**
@@ -62,7 +60,7 @@ public class Rectangle extends Shape {
 	 */
 	double getWidth() {
 
-		if(points.get(1) != null) {
+		if(points[1] != null) {
 			return Math.abs(calculateWidth());
 		}
 		return -1;
@@ -76,10 +74,10 @@ public class Rectangle extends Shape {
 	private double calculateWidth() {
 		//transpose the x coordinates to the positive quadrant if the x value
 		//of the start point is negative.  
-		if(points.get(0).get_x() < 0) {
-			return Math.abs(points.get(0).get_x()) + points.get(1).get_x();
+		if(points[0].get_x() < 0) {
+			return Math.abs(points[0].get_x()) + points[1].get_x();
 		}
-		return points.get(1).get_x() - points.get(0).get_x();
+		return points[1].get_x() - points[0].get_x();
 	}
 
 
@@ -150,10 +148,10 @@ public class Rectangle extends Shape {
 		String height_NA = String.format("height=%s",na);
 
 		//start point
-		res += points.get(0) != null ?String.format("start=%.1f, %.1f", points.get(0).get_x(), points.get(0).get_y()): startP_NA;
+		res += points[0] != null ?String.format("start=%.1f, %.1f", points[0].get_x(), points[0].get_y()): startP_NA;
 		res += del;
 		//end point
-		res += points.get(1) != null? String.format("end=%.1f, %.1f", points.get(1).get_x(), points.get(1).get_y()): endP_NA;
+		res += points[1] != null? String.format("end=%.1f, %.1f", points[1].get_x(), points[1].get_y()): endP_NA;
 		res += del;
 		//get width
 		res += getWidth() != -1? String.format("width=%.1f", getWidth()): width_NA;
