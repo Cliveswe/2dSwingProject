@@ -9,16 +9,18 @@ import java.util.ArrayList;
  * <p>
  * Example: "Create a circle or rectangle."
  * 
- *  <h2>Updates for assignment 2</h2>
+ * <h2>Updates for Custom Exception</h2>
  * Change the variable points from and array of Point to an ArrayList of type Point.
- * Remember to refactor the constructors and the overloaded methods addPoint.
-
+ * Remember to re-factor the constructors and the overloaded methods addPoint.
+ * <p>
+ * <h2>Updates for Step 3</h2>
+ * Added a throwable to methods getCircumference and getArea.
+ * 
  * @author Clive Leddy
- * @version 2.0
+ * @version 2.1
  */
 public abstract class Shape implements IDrawable {
-
-
+	protected String END_POINT_ERROR_MESSAGE = "end point is missing!";
 	//class variables
 	protected String color;//shape colour.
 	//a list of coordinates to draw the shape.
@@ -51,7 +53,7 @@ public abstract class Shape implements IDrawable {
 		points = new ArrayList<Point>();//create an ArrayList object
 		points.add(0, new Point(x,y));
 		points.add(1, null);
-
+		
 	}
 
 	/**
@@ -72,15 +74,17 @@ public abstract class Shape implements IDrawable {
 
 	/**
 	 * Get the circumference of the shape. 
-	 * @return the circumference as a double
+	 * @return the circumference as a double.
+	 * @throws ShapeException on error.
 	 */
-	public abstract double getCircumference();
+	public abstract double getCircumference() throws ShapeException;
 
 	/**
 	 * Get the area of the shape. 
 	 * @return the area as a double
+	 * @throws ShapeException on error
 	 */
-	public abstract double getArea();
+	public abstract double getArea() throws ShapeException;
 
 	/**
 	 * Add the end point to the array of points.
@@ -90,7 +94,7 @@ public abstract class Shape implements IDrawable {
 		//this.points[1] = p;
 		this.points.set(1, p);
 	}
-
+	
 	/**
 	 * Add the end point to the array of points with the given coordinates.
 	 * @param x coordinate of a point as a double.
@@ -99,5 +103,6 @@ public abstract class Shape implements IDrawable {
 	public void addPoint(double x, double y) {
 		//this.points[1] = new Point(x, y);
 		this.points.set(1, new Point(x,y));
-	}	
+	}
+	
 }

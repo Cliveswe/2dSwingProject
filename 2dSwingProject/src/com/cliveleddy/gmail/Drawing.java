@@ -9,9 +9,12 @@ import java.util.Collection;
  * This class will manage a collection of Shape objects. It implements the class interface
  * <code>IDrawable</code>. In addition, implement the class methods that are defined in the 
  * given main class.
- *  
+ *  <p>
+ * <h2>Updates for Custom Exception</h2>
+ * Added a try catch to methods getTotalCircumference and getTotalArea.
+ * 
  * @author Clive Leddy
- * @version 1.0
+ * @version 1.1
  */
 public class Drawing implements IDrawable {
 
@@ -47,7 +50,7 @@ public class Drawing implements IDrawable {
 	@Override
 	public void draw() {
 		System.out.println(this.toString());
-		
+
 		System.out.println("A drawing  by " + this.author + " called " + this.name);
 		//render each of the shape object in the collection of shapes.
 		for(Shape s: shapes) {
@@ -105,9 +108,13 @@ public class Drawing implements IDrawable {
 	 */
 	public double getTotalCircumference() {
 		double c = 0;
+
 		for(Shape s: shapes) {
-			if(s.getCircumference() != -1) {
+			try {
 				c += s.getCircumference();
+			} 
+			catch (ShapeException e) {
+
 			}
 		}
 		return c;
@@ -120,9 +127,13 @@ public class Drawing implements IDrawable {
 	 */
 	public double getTotalArea() {
 		double a = 0;
+
 		for(Shape s: shapes) {
-			if(s.getArea()!= -1) {
+			try {
 				a += s.getArea();
+			}
+			catch (ShapeException e) {
+
 			}
 		}
 		return a;
@@ -132,18 +143,18 @@ public class Drawing implements IDrawable {
 		String res = "Drawing[";		
 
 		String del = String.format("; ");
-		
+
 		//name and author
-		res += String.format("name=%s%s author=%s%s",this.name,del, this.author, del);
+		res += String.format("name=%s%s author=%s%s", this.name, del, this.author, del);
 		//get size
 		res += String.format("size=%d%s", this.getSize(), del);
 		//get circumference
-		res += String.format("circumference=%.1f%s",this.getTotalCircumference(), del);
+		res += String.format("circumference=%.1f%s", this.getTotalCircumference(), del);
 		//get area
-		res += String.format("area=%.1f",this.getTotalArea());
-	
+		res += String.format("area=%.1f", this.getTotalArea());
+
 		res += "]\n";
-		
+
 		return res;
 	}
 

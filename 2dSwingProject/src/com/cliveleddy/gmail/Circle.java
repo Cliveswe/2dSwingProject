@@ -9,9 +9,13 @@ import java.awt.Graphics;
  * <p>
  * <h2>Updates for Collection</h2>
  * Change the call to variable points from and array of Point to an ArrayList of type Point.
+ * <p>
+ * <h2>Updates for Custom Exception</h2>
+ * Added a throwable to methods getCircumference and getArea. In addition, the toString method has been
+ * amended to reflect the changes to the getArea method.
  * 
  * @author Clive Leddy
- * @version 2.0
+ * @version 1.1
  */
 public class Circle extends Shape{
 
@@ -27,11 +31,16 @@ public class Circle extends Shape{
 		super(startx, endy, color);
 	}
 
-	public double getRadius() {
+	/**
+	 * Calculate the radius of the circle.
+	 * @return the radius of a circle as an int.
+	 * @throws ShapeException the second Point is undefined. 
+	 */
+	public double getRadius() throws ShapeException {
 		if(points.get(1) != null) {
 			return calculateRadius(points.get(0).get_x(), points.get(0).get_y(), points.get(1).get_x(), points.get(1).get_y());
 		}
-		return -1;
+		throw new ShapeException(END_POINT_ERROR_MESSAGE);
 	}
 
 	/**
@@ -74,32 +83,47 @@ public class Circle extends Shape{
 
 	/**
 	 * Calculate the circumference of a circle using the equation C = 2pi * r
-	 * @param the circumference of a circle as a double otherwise -1 on error.
+	 * @param the circumference of a circle as a double.
+	 * @throws ShapeException on error.
 	 */
 	@Override
-	public double getCircumference() {
+	public double getCircumference() throws ShapeException {
+		double res = -1;
 
-		if(getRadius() != -1) {
-			return 2 * getPi() * getRadius();
+		try {
+			if(getRadius() != -1) {
+				res = 2 * getPi() * getRadius();
+			}
+		}catch (ShapeException e){
+			throw new ShapeException(e);
 		}
-
-		return -1;
+		return res;
 	}
 
 	/**
 	 * Calculate the area of a circle, A = pi * r^2.
 	 * 
-	 * @return area of a circle otherwise -1 on error.
+	 * @return area of a circle otherwise.
+	 * @throws ShapeException on error.
 	 */
 	@Override
-	public double getArea() {
+	public double getArea() throws ShapeException {
+		double res = -1;
 
-		if(getRadius() != -1) {
-			return Math.pow(getRadius(), 2) * getPi();
+		try {
+			if(getRadius() != -1) {
+				res = Math.pow(getRadius(), 2) * getPi();
+			}
+		}catch (ShapeException e){
+			throw new ShapeException(e);
 		}
-		return -1;
+		return res;
 	}
 
+	/**
+	 * Get the value for pi.
+	 * @return 3.14 as double.
+	 */
 	public static double getPi() {
 		return pi;
 	}
@@ -113,6 +137,14 @@ public class Circle extends Shape{
 		String startP_NA = String.format("start=%s",na);
 		String endP_NA = String.format("end=%s",na);
 		String radius_NA = String.format("Radius=%s", na);
+		double radius;
+
+		try {
+			radius = getRadius();
+		}
+		catch (ShapeException e) {
+			radius = 0.0;
+		}
 
 		//start point
 		res += points.get(0) != null ? String.format("start=%.1f, %.1f", points.get(0).get_x(), points.get(0).get_y()) : startP_NA;
@@ -121,7 +153,7 @@ public class Circle extends Shape{
 		res += points.get(1) != null ? String.format("end=%.1f, %.1f", points.get(1).get_x(), points.get(1).get_y()) : endP_NA;
 		res += del;
 		//get radius
-		res += getRadius() != -1 ?  String.format("radius=%.1f", getRadius()): radius_NA;
+		res += radius != 0 ?  String.format("radius=%.1f", radius): radius_NA;
 		res += del;
 		//get colour
 		res += String.format("color=%s", getColor());
@@ -129,6 +161,5 @@ public class Circle extends Shape{
 
 		return res;
 	}
-
 
 }

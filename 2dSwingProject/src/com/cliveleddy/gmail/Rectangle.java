@@ -8,11 +8,17 @@ import java.awt.Graphics;
  * 
  * <h2>Updates for Collection</h2>
  * Change the call to variable points from and array of Point to an ArrayList of type Point.
-
+ * <p>
+ * <h2>Updated for Custom Exception</h2>
+ * Added throwable code to the following methods.
+ * getHeight, getWidght, getCircumference and getArea.  In addition, the toString method has been
+ * amended to reflect the changes to the getWidth and getHeight methods.
+ * 
  * @author Clive Leddy
- * @version 2.0
+ * @version 2.1
  */
 public class Rectangle extends Shape {
+
 	/**
 	 * Create a rectangle.
 	 * @param startPoint upper left point as an object Point.
@@ -32,13 +38,14 @@ public class Rectangle extends Shape {
 
 	/**
 	 * Get the height of the rectangle.
-	 * @return height as a double, -1 if the second Point is not defined.
+	 * @return height as a double.
+	 * @throws ShapeException the second Point is undefined.
 	 */
-	double getHeight() {
+	double getHeight() throws ShapeException {
 		if(points.get(1) != null) {
 			return Math.abs(calculateHeight());
 		}
-		return -1;
+		throw new ShapeException(END_POINT_ERROR_MESSAGE);
 	}
 
 	/**
@@ -58,14 +65,15 @@ public class Rectangle extends Shape {
 
 	/**
 	 * Get the weight of the rectangle.
-	 * @return weight as a double, -1 if the second point is not defined.
+	 * @return weight as a double.
+	 * @throws ShapeException the second Point is undefined.
 	 */
-	double getWidth() {
+	double getWidth() throws ShapeException{
 
 		if(points.get(1) != null) {
 			return Math.abs(calculateWidth());
 		}
-		return -1;
+		throw new ShapeException(END_POINT_ERROR_MESSAGE);
 	}
 
 	/**
@@ -85,39 +93,63 @@ public class Rectangle extends Shape {
 
 	/**
 	 * Calculate the circumference of the rectangle.
-	 * @return the circumference as a double, -1 on error.
+	 * @return the circumference as a double.
+	 * @throws ShapeException on error.
 	 */
 	@Override
-	public double getCircumference() {
-		if(checkBoundaries()) {
-			return 2 * getHeight() + 2 * getWidth();	
+	public double getCircumference() throws ShapeException {
+		double res = -1;
+
+		try{
+			if(checkBoundaries()) {
+				res = 2 * getHeight() + 2 * getWidth();	
+			}
+		}
+		catch (ShapeException e) {
+			throw new ShapeException(e);
 		}
 
-		return -1;
+		return res;
 	}
 
 	/**
 	 * Calculate the area of the rectangle.
-	 * @return the area as a double, -1 on error.
+	 * @return the area as a double.
+	 * @throws ShapeException on error.
 	 */
 	@Override
-	public double getArea() {
-		if(checkBoundaries()) {
-			return getHeight() * getWidth();	
+	public double getArea() throws ShapeException {
+		double res = -1;
+
+		try {
+			if(checkBoundaries()) {
+				res = getHeight() * getWidth();
+			}
+		} catch (ShapeException e) {
+			throw new ShapeException(e);
 		}
 
-		return -1;
+		return res;
 	}
 
 	/**
 	 * Check the rectangles boundaries.
-	 * @return -1 if either the width of height of the rectangle cannot be calculated, otherwise 0.
+	 * @return true if the boundaries are valid.
+	 * @throws ShapeException if either the width of height of the rectangle cannot be calculated. 
 	 */
-	private boolean checkBoundaries() {
-		if((getWidth() == -1) || (getHeight() == -1)) {
-			return false;
+	private boolean checkBoundaries() throws ShapeException{
+		boolean ans = false;
+
+		try {
+			getHeight();
+			getWidth();
+			ans = true;
+		} catch (ShapeException e) {
+			throw new ShapeException(e);
 		}
-		return true;
+
+		return ans;
+		
 	}
 
 	/**
@@ -125,7 +157,9 @@ public class Rectangle extends Shape {
 	 */
 	@Override
 	public void draw() {
+
 		System.out.print(toString());
+
 	}
 
 	@Override
@@ -148,6 +182,20 @@ public class Rectangle extends Shape {
 		String endP_NA = String.format("end=%s",na);
 		String width_NA = String.format("width=%s",na);
 		String height_NA = String.format("height=%s",na);
+		double height, width;
+
+
+		try {
+			height = getHeight();
+		} catch (ShapeException e) {
+			height = 0.0;
+		}
+
+		try {
+			width = getWidth();
+		} catch (ShapeException e) {
+			width = 0.0;
+		}
 
 		//start point
 		res += points.get(0) != null ?String.format("start=%.1f, %.1f", points.get(0).get_x(), points.get(0).get_y()): startP_NA;
@@ -156,15 +204,16 @@ public class Rectangle extends Shape {
 		res += points.get(1) != null? String.format("end=%.1f, %.1f", points.get(1).get_x(), points.get(1).get_y()): endP_NA;
 		res += del;
 		//get width
-		res += getWidth() != -1? String.format("width=%.1f", getWidth()): width_NA;
+		res += width != 0? String.format("width=%.1f", width): width_NA;
 		res += del;
 		//get height
-		res += getHeight() != -1? String.format("height=%.1f", getHeight()): height_NA;
+		res += height != 0? String.format("height=%.1f", height): height_NA;
 		res += del;
 		//get colour
 		res += String.format("color=%s", getColor());
 		res += "]\n";
 
-		return res;
+		return res ;
+
 	}
 }
