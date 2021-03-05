@@ -1,4 +1,4 @@
-package com.cliveleddy.gmail;
+package com.cliveleddy.gmail.model;
 /**
  * <h1>Class ShapeException</h1>
  * This is a custom Exception that wraps the standard Java Exception and adds an Error code for 

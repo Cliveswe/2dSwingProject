@@ -1,4 +1,4 @@
-package com.cliveleddy.gmail;
+package com.cliveleddy.gmail.model;
 
 import java.awt.Graphics;
 

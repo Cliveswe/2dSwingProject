@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.cliveleddy.gmail;
+package com.cliveleddy.gmail.model;
 
 /**
  * <h1>Class Point</h1>

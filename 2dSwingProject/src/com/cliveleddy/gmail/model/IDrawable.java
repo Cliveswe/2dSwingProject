@@ -1,4 +1,4 @@
-package com.cliveleddy.gmail;
+package com.cliveleddy.gmail.model;
 
 /**
  * <h1>Interface Drawable</h1>
