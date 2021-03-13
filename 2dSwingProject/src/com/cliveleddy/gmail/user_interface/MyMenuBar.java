@@ -1,4 +1,4 @@
-package com.cliveleddy.gmail.view;
+package com.cliveleddy.gmail.user_interface;
 
 import java.util.Map;
 
@@ -38,13 +38,23 @@ public class MyMenuBar extends JMenuBar {
 	}
 
 	/**
+	 * Get a text description.
+	 * 
+	 * @param key to index the container that holds the text description as Enum.
+	 * @return a String.
+	 */
+	private static String getText(MBTextEnum key) {
+		return Text.get(key);
+	}
+
+	/**
 	 * Create the menu bars functions, File and Edit.
 	 */
 	private void initialiseMenuBar() {
 		// File menu
-		add(initialiseFileMenu(new JMenu(Text.get(MBTextEnum.FILE))));
+		add(initialiseFileMenu(new JMenu(getText(MBTextEnum.FILE))));
 		// Edit menu
-		add(initialiseEditMenu(new JMenu(Text.get(MBTextEnum.EDIT))));
+		add(initialiseEditMenu(new JMenu(getText(MBTextEnum.EDIT))));
 	}
 
 	/**
@@ -53,11 +63,11 @@ public class MyMenuBar extends JMenuBar {
 	 * @param mFile file menu as JMenu.
 	 */
 	private JMenu initialiseFileMenu(JMenu mFile) {
-		mFile.add(new JMenuItem(Text.get(MBTextEnum.NEW) + Text.get(MBTextEnum.DOT)));
-		mFile.add(new JMenuItem(Text.get(MBTextEnum.SAVE_AS) + Text.get(MBTextEnum.DOT)));
-		mFile.add(new JMenuItem(Text.get(MBTextEnum.LOAD) + Text.get(MBTextEnum.DOT)));
+		mFile.add(new JMenuItem(getText(MBTextEnum.NEW) + getText(MBTextEnum.DOT)));
+		mFile.add(new JMenuItem(getText(MBTextEnum.SAVE_AS) + getText(MBTextEnum.DOT)));
+		mFile.add(new JMenuItem(getText(MBTextEnum.LOAD) + getText(MBTextEnum.DOT)));
 		mFile.addSeparator();
-		mFile.add(new JMenuItem(Text.get(MBTextEnum.EXIT)));
+		mFile.add(new JMenuItem(getText(MBTextEnum.EXIT)));
 
 		return mFile;
 	}
@@ -68,9 +78,9 @@ public class MyMenuBar extends JMenuBar {
 	 * @param mEdit file menu as JMenu.
 	 */
 	private JMenu initialiseEditMenu(JMenu mEdit) {
-		mEdit.add(new JMenuItem(Text.get(MBTextEnum.UNDO) + Text.get(MBTextEnum.DOT)));
-		mEdit.add(new JMenuItem(Text.get(MBTextEnum.NAME) + Text.get(MBTextEnum.DOT)));
-		mEdit.add(new JMenuItem(Text.get(MBTextEnum.AUTHOR) + Text.get(MBTextEnum.DOT)));
+		mEdit.add(new JMenuItem(getText(MBTextEnum.UNDO) + getText(MBTextEnum.DOT)));
+		mEdit.add(new JMenuItem(getText(MBTextEnum.NAME) + getText(MBTextEnum.DOT)));
+		mEdit.add(new JMenuItem(getText(MBTextEnum.AUTHOR) + getText(MBTextEnum.DOT)));
 
 		return mEdit;
 	}

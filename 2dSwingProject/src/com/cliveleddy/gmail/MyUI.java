@@ -1,6 +1,6 @@
 package com.cliveleddy.gmail;
 
-import com.cliveleddy.gmail.view.MyGUIContainer;
+import com.cliveleddy.gmail.user_interface.MyGUIContainer;
 
 /**
  * 

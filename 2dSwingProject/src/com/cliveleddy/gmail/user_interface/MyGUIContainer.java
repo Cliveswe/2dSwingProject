@@ -1,6 +1,7 @@
-package com.cliveleddy.gmail.view;
+package com.cliveleddy.gmail.user_interface;
 
 import java.awt.BorderLayout;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -19,11 +20,33 @@ public class MyGUIContainer extends JFrame {
 
 	private final int FRAME_WIDTH = 800;
 	private final int FRAME_HEIGHT = 800;
-	private final int POSITION_X = 300;
-	private final int POSITION_Y = 50;
+	// private final int POSITION_X = 300;
+	// private final int POSITION_Y = 50;
+
+	/**
+	 * The key values to get a text description.
+	 */
+	public static enum UITextEnum {
+		TITLE
+	};
+
+	/**
+	 * A dictionary that is indexed by a key.
+	 */
+	public static Map<UITextEnum, String> Text = Map.ofEntries(Map.entry(UITextEnum.TITLE, "My GUI"));
 
 	public MyGUIContainer() {
 		super();
+	}
+
+	/**
+	 * Get a text description.
+	 * 
+	 * @param key to index the container that holds the text description as Enum.
+	 * @return a String.
+	 */
+	public static String getText(UITextEnum key) {
+		return Text.get(key);
 	}
 
 	/**
@@ -45,11 +68,11 @@ public class MyGUIContainer extends JFrame {
 		add(new MyMenuBar(), BorderLayout.PAGE_START);
 
 		// add the status bar to the layout
-		// add(new MyStatusBar(), BorderLayout.PAGE_END);
+		add(new MyStatusBar(), BorderLayout.PAGE_END);
 	}
 
 	private void SetFrameTitle() {
-		this.setTitle(UserInterfaceText.getText(UserInterfaceText.UITextEnum.TITLE));
+		this.setTitle(getText(UITextEnum.TITLE));
 	}
 
 	private void SetLookAndFeel() {
