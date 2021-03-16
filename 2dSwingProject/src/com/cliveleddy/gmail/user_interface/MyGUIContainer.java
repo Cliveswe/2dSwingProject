@@ -1,6 +1,7 @@
 package com.cliveleddy.gmail.user_interface;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.Map;
 
 import javax.swing.JFrame;
@@ -20,6 +21,9 @@ public class MyGUIContainer extends JFrame {
 
 	private final int FRAME_WIDTH = 800;
 	private final int FRAME_HEIGHT = 800;
+	private final int FRAME_MIN_WIDTH = 400;
+	private final int FRAME_MIN_HEIGHT = 300;
+
 	// private final int POSITION_X = 300;
 	// private final int POSITION_Y = 50;
 
@@ -66,7 +70,7 @@ public class MyGUIContainer extends JFrame {
 		setLayout(new BorderLayout());
 		// add the menu bar to the layout
 		add(new MyMenuBar(), BorderLayout.PAGE_START);
-
+		add(new MyDrawingArea(this), BorderLayout.CENTER);
 		// add the status bar to the layout
 		add(new MyStatusBar(), BorderLayout.PAGE_END);
 	}
@@ -96,13 +100,15 @@ public class MyGUIContainer extends JFrame {
 	private void SetWindowSize() {
 		// set the size of the window
 		setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		// set the minimum window size
+		setMinimumSize(new Dimension(FRAME_MIN_WIDTH, FRAME_MIN_HEIGHT));
 		// this.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		// setBounds(POSITION_X, POSITION_Y, FRAME_WIDTH, FRAME_HEIGHT);
 
 		// centre the window on screen
 		setLocationRelativeTo(null);
 		// the window is not re-sizable
-		setResizable(false);
+		// setResizable(true);
 
 	}
 }

@@ -2,6 +2,7 @@ package com.cliveleddy.gmail.user_interface;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.Map;
 
@@ -98,7 +99,14 @@ public class MyStatusBar extends JPanel {
 		public MyShapeColour(String title) {
 			super();
 			add(new JLabel(title));
-			add(new JLabel("image"));
+
+			// TODO code for this label will be modified to show a shape instead
+			JLabel imageLabel = new JLabel();
+			imageLabel.setOpaque(true);
+			imageLabel.setBackground(Color.GREEN);
+			imageLabel.setPreferredSize(new Dimension(20, 20));
+			// add(new JLabel("image"));
+			add(imageLabel);
 
 		}
 	}
