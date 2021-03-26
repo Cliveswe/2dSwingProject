@@ -10,14 +10,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * Create a status bar containing the mouse coordinates and the colour of a
- * selected shape.
+ * <h1>Class MyStatusBar</h1> Create a status bar containing the mouse
+ * coordinates and the colour of a selected shape.
+ * <p>
+ * Added a listener class as an inner class. This class catches an event object
+ * and extracts the mouse coordinates as a x, y pair. Then it calls the methods
+ * to update the GUI.
  * 
  * @author Clive Leddy
- * @version 1.0
+ * @version 1.1
  */
-@SuppressWarnings("serial")
+
 public class MyStatusBar extends JPanel {
+	private static final long serialVersionUID = -1185694110633572898L;
 
 	/**
 	 * The key values to get a text description.
@@ -34,15 +39,36 @@ public class MyStatusBar extends JPanel {
 			Map.entry(SBTextEnum.MOUSE_COORDINATES_TITLE, "Coordinates"),
 			Map.entry(SBTextEnum.SELECTED_COLOUR, "Selected colour"));
 
+	/**
+	 * An instance of the mouse coordinate object that displays the mouse
+	 * coordinates in the status bar.
+	 */
+	private MyMouseCoordinates myMouseCoordinates = new MyMouseCoordinates(
+			getText(SBTextEnum.MOUSE_COORDINATES_TITLE) + getText(SBTextEnum.END));
+
+	private IMouseLocationListener locationOfMouse;
+
 	public MyStatusBar() {
 		super();
+		locationOfMouse = new CoordinatesOfMouse();
+
 		setLayout(new BorderLayout());
+
 		// add a mouse coordinates class
-		add(new MyMouseCoordinates(getText(SBTextEnum.MOUSE_COORDINATES_TITLE) + getText(SBTextEnum.END), "0", "0"),
-				BorderLayout.LINE_START);
+		add(myMouseCoordinates, BorderLayout.LINE_START);
 		// add a selected colour class
 		add(new MyShapeColour(getText(SBTextEnum.SELECTED_COLOUR) + getText(SBTextEnum.END)), BorderLayout.LINE_END);
 		setBackground(Color.LIGHT_GRAY);
+	}
+
+	/**
+	 * Get the reference to the instance of object myMouseCoordinates.
+	 * 
+	 * @return a reference to the object of myMouseCoordinates as type
+	 *         MyMouseCoordinates.
+	 */
+	public MyMouseCoordinates getMyMouseCoordinates() {
+		return myMouseCoordinates;
 	}
 
 	/**
@@ -55,14 +81,52 @@ public class MyStatusBar extends JPanel {
 		return Text.get(key);
 	}
 
+	public IMouseLocationListener getMouseLocationListener() {
+		return locationOfMouse;
+	}
+
 	/**
-	 * Abstract class that set the layout type and opaque.
+	 * <h1>Implement the interface class IMouseLocationListener that is used to
+	 * catch an instance of the MouseLocationEvent event.</h1> Then set the mouse
+	 * coordinates as string pair.
+	 * 
+	 * @author Clive Leddy
+	 * @version 1.0
+	 */
+	class CoordinatesOfMouse implements IMouseLocationListener {
+
+		/**
+		 * 
+		 * Query the event object and extract the coordinates of the mouse. Convert the
+		 * mouse x and y coordinates to a String. Pass the string coordinates to the
+		 * MyMouseCoordinates class.
+		 * 
+		 * @param event an event object of type MouseLocationEvent.
+		 * 
+		 */
+		@Override
+		public void mouseLocationEventOccurred(MouseLocationEvent event) {
+
+			if (event.getLocation() != null) {
+				getMyMouseCoordinates().setMouseCoordinates(Integer.toString(event.getLocation().x),
+						Integer.toString(event.getLocation().y));
+			} else {
+				getMyMouseCoordinates().setMouseCoordinates(null, null);
+			}
+		}
+
+	}
+
+	/**
+	 * <h1>Abstract class that set the layout type and opaque.</h1>
 	 * 
 	 * @author Clive Leddy
 	 * @version 1.0
 	 *
 	 */
 	abstract class MyStatusBarComponents extends JPanel {
+		private static final long serialVersionUID = -586670725549199998L;
+
 		public MyStatusBarComponents() {
 			super();
 			setLayout(new FlowLayout());
@@ -71,30 +135,55 @@ public class MyStatusBar extends JPanel {
 	}
 
 	/**
-	 * Display the mouse coordinates as x, y.
+	 * </h1>Display the mouse coordinates as x,y.</h1>
 	 * 
 	 * @author Clive Leddy
 	 * @version 1.0
 	 *
 	 */
-	class MyMouseCoordinates extends MyStatusBarComponents {
+	public class MyMouseCoordinates extends MyStatusBarComponents {
+		private static final long serialVersionUID = 6077525360115010702L;
 
-		public MyMouseCoordinates(String title, String dummyValue1, String dummyValue2) {
+		private JLabel title;
+		private JLabel coordinates;
+
+		public MyMouseCoordinates(String title) {
 			super();
-			add(new JLabel(title));
-			add(new JLabel(dummyValue1 + "," + dummyValue2));
-
+			this.title = new JLabel(title);
+			// display mouse coordinates.
+			coordinates = new JLabel();
+			// initialise the coordinates to null.
+			setMouseCoordinates(null, null);
+			add(this.title);
+			add(coordinates);
 		}
+
+		/**
+		 * Set the mouse coordinates in the status field. Both coordinates have to non
+		 * null or the coordinates are displayed as a blank String.
+		 * 
+		 * @param xCoordinate x coordinate as a String.
+		 * @param yCoordinate y coordinate as a String.
+		 */
+		public void setMouseCoordinates(String xCoordinate, String yCoordinate) {
+			if ((xCoordinate != null) && (yCoordinate != null)) {
+				coordinates.setText(xCoordinate + "," + yCoordinate);
+			} else {
+				coordinates.setText("");
+			}
+		}
+
 	}
 
 	/**
-	 * Show the selected colour.
+	 * <h1>Show the selected colour.</h1>
 	 * 
 	 * @author Clive Leddy
 	 * @version 1.0
 	 *
 	 */
 	class MyShapeColour extends MyStatusBarComponents {
+		private static final long serialVersionUID = 7172717267359201923L;
 
 		public MyShapeColour(String title) {
 			super();
@@ -110,5 +199,4 @@ public class MyStatusBar extends JPanel {
 
 		}
 	}
-
 }

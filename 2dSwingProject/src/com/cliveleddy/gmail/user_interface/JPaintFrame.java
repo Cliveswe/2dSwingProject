@@ -9,23 +9,22 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
- * This is the application container window. It extends the JFrame swing and
- * contains components used in this application.
+ * <h1>Class JPaintFrame</h1> This is the application container window. It
+ * extends the JFrame swing and contains components used in this application.
+ * <p>
+ * <h1>Version 2</h1> The class has been renamed to JPaintFrame. New click
+ * features will be added.
  * 
  * @author Clive Leddy
- * @version 1.0
+ * @version 2.0
  *
  */
-@SuppressWarnings("serial")
-public class MyGUIContainer extends JFrame {
-
+public class JPaintFrame extends JFrame {
+	private static final long serialVersionUID = -3289281159035541953L;
 	private final int FRAME_WIDTH = 800;
 	private final int FRAME_HEIGHT = 800;
 	private final int FRAME_MIN_WIDTH = 400;
 	private final int FRAME_MIN_HEIGHT = 300;
-
-	// private final int POSITION_X = 300;
-	// private final int POSITION_Y = 50;
 
 	/**
 	 * The key values to get a text description.
@@ -37,9 +36,9 @@ public class MyGUIContainer extends JFrame {
 	/**
 	 * A dictionary that is indexed by a key.
 	 */
-	public static Map<UITextEnum, String> Text = Map.ofEntries(Map.entry(UITextEnum.TITLE, "My GUI"));
+	public static Map<UITextEnum, String> Text = Map.ofEntries(Map.entry(UITextEnum.TITLE, "JPaint"));
 
-	public MyGUIContainer() {
+	public JPaintFrame() {
 		super();
 	}
 
@@ -58,21 +57,29 @@ public class MyGUIContainer extends JFrame {
 	 */
 	public void Initialise() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		SetLookAndFeel();
 		SetWindowSize();
 		SetFrameTitle();
 		SetLayout();
-		this.setVisible(true);
+		setVisible(true);
 	}
 
 	private void SetLayout() {
+		MyStatusBar sb = new MyStatusBar();
+		MyDrawingArea da = new MyDrawingArea();
+
+		da.addMouseLocationListener(sb.getMouseLocationListener());
+		// da.addColourSelectionListener(sb.getColourSelectedListener());
+		// da.addSelectShapeListener(sb.getSelectedShapeListener());
+
 		setLayout(new BorderLayout());
 		// add the menu bar to the layout
 		add(new MyMenuBar(), BorderLayout.PAGE_START);
-		add(new MyDrawingArea(this), BorderLayout.CENTER);
+//		add(new MyDrawingArea(), BorderLayout.CENTER);
+		add(da, BorderLayout.CENTER);
 		// add the status bar to the layout
-		add(new MyStatusBar(), BorderLayout.PAGE_END);
+		// add(new MyStatusBar(), BorderLayout.PAGE_END);
+		add(sb, BorderLayout.PAGE_END);
 	}
 
 	private void SetFrameTitle() {

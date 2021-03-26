@@ -1,7 +1,9 @@
 package com.cliveleddy.gmail.user_interface;
 
+import java.awt.event.ActionEvent;
 import java.util.Map;
 
+import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -63,13 +65,55 @@ public class MyMenuBar extends JMenuBar {
 	 * @param mFile file menu as JMenu.
 	 */
 	private JMenu initialiseFileMenu(JMenu mFile) {
-		mFile.add(new JMenuItem(getText(MBTextEnum.NEW) + getText(MBTextEnum.DOT)));
-		mFile.add(new JMenuItem(getText(MBTextEnum.SAVE_AS) + getText(MBTextEnum.DOT)));
-		mFile.add(new JMenuItem(getText(MBTextEnum.LOAD) + getText(MBTextEnum.DOT)));
+
+		// mFile.add(new JMenuItem(getText(MBTextEnum.NEW) + getText(MBTextEnum.DOT)));
+		newMenuItem(mFile);
+		// mFile.add(new JMenuItem(getText(MBTextEnum.SAVE_AS) +
+		// getText(MBTextEnum.DOT)));
+		saveAsMenuItem(mFile);
+		// mFile.add(new JMenuItem(getText(MBTextEnum.LOAD) + getText(MBTextEnum.DOT)));
+		loadMenuItem(mFile);
 		mFile.addSeparator();
-		mFile.add(new JMenuItem(getText(MBTextEnum.EXIT)));
+		exitMenuItem(mFile);
+		// mFile.add(new myJMenuItem(getText(MBTextEnum.EXIT)));
 
 		return mFile;
+	}
+
+	private void newMenuItem(JMenu mFile) {
+		mFile.add(new JMenuItem(new AbstractAction(getText(MBTextEnum.NEW) + getText(MBTextEnum.DOT)) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO add instructions
+			}
+		}));
+	}
+
+	private void saveAsMenuItem(JMenu mFile) {
+		mFile.add(new JMenuItem(new AbstractAction(getText(MBTextEnum.SAVE_AS) + getText(MBTextEnum.DOT)) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO add instructions
+			}
+		}));
+	}
+
+	private void loadMenuItem(JMenu mFile) {
+		mFile.add(new JMenuItem(new AbstractAction(getText(MBTextEnum.LOAD) + getText(MBTextEnum.DOT)) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO add instructions
+			}
+		}));
+	}
+
+	private void exitMenuItem(JMenu mFile) {
+		mFile.add(new JMenuItem(new AbstractAction(getText(MBTextEnum.EXIT)) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		}));
 	}
 
 	/**
@@ -84,4 +128,28 @@ public class MyMenuBar extends JMenuBar {
 
 		return mEdit;
 	}
+
+	class myJMenuItem extends AbstractAction {
+		private String mTitle;
+
+		public myJMenuItem(String title) {
+			super(title);
+
+			mTitle = title;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Text.containsValue(mTitle);
+			switch (mTitle) {
+			case "Exit":
+				// System.exit(0);
+				break;
+			default:
+				// TODO
+			}
+
+		}
+	}
+
 }
