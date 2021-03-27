@@ -76,10 +76,9 @@ public class JPaintFrame extends JFrame {
 	 * Add an icon to the top left of the JFrame
 	 */
 	public void SetFrameIcon() {
-		// private BufferedImage img = null;
 		BufferedImage img = null;
 		try {
-			img = ImageIO.read(getClass().getResource("../resource/favicon-16x16.png"));
+			img = ImageIO.read(getClass().getResource("../resource/favicon-32x32.png"));
 
 		} catch (IOException e) {
 			e.printStackTrace();
