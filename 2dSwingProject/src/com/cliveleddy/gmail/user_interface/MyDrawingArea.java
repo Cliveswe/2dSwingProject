@@ -121,7 +121,7 @@ public class MyDrawingArea extends JPanel {
 			// display 3 rows
 			drawingTool.setMaximumRowCount(3);
 			// don't preselect an combo box item
-			drawingTool.setSelectedIndex(-1);
+			drawingTool.setSelectedIndex(0);
 			return drawingTool;
 		}
 	}

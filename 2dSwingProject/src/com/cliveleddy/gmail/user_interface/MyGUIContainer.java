@@ -2,8 +2,11 @@ package com.cliveleddy.gmail.user_interface;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -16,16 +19,14 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @version 1.0
  *
  */
-@SuppressWarnings("serial")
+
 public class MyGUIContainer extends JFrame {
 
+	private static final long serialVersionUID = 3956570759764956557L;
 	private final int FRAME_WIDTH = 800;
 	private final int FRAME_HEIGHT = 800;
 	private final int FRAME_MIN_WIDTH = 400;
 	private final int FRAME_MIN_HEIGHT = 300;
-
-	// private final int POSITION_X = 300;
-	// private final int POSITION_Y = 50;
 
 	/**
 	 * The key values to get a text description.
@@ -38,9 +39,18 @@ public class MyGUIContainer extends JFrame {
 	 * A dictionary that is indexed by a key.
 	 */
 	public static Map<UITextEnum, String> Text = Map.ofEntries(Map.entry(UITextEnum.TITLE, "My GUI"));
+	private BufferedImage img = null;
 
 	public MyGUIContainer() {
 		super();
+		try {
+			img = ImageIO.read(getClass().getResource("favicon-16x16.png"));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		setIconImage(img);
 	}
 
 	/**
