@@ -2,8 +2,11 @@ package com.cliveleddy.gmail.user_interface;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -43,6 +46,7 @@ public class JPaintFrame extends JFrame {
 
 	public JPaintFrame() {
 		super();
+
 	}
 
 	/**
@@ -60,11 +64,28 @@ public class JPaintFrame extends JFrame {
 	 */
 	public void Initialise() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		SetFrameIcon();
 		SetLookAndFeel();
 		SetWindowSize();
 		SetFrameTitle();
 		SetLayout();
 		setVisible(true);
+	}
+
+	/**
+	 * Add an icon to the top left of the JFrame
+	 */
+	public void SetFrameIcon() {
+		// private BufferedImage img = null;
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(getClass().getResource("../resource/favicon-16x16.png"));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		setIconImage(img);
 	}
 
 	private void SetLayout() {
