@@ -68,8 +68,9 @@ public class JPaintFrame extends JFrame {
 		MyStatusBar sb = new MyStatusBar();
 		MyDrawingArea da = new MyDrawingArea();
 
+		// add listeners for UI events
 		da.addMouseLocationListener(sb.getMouseLocationListener());
-		// da.addColourSelectionListener(sb.getColourSelectedListener());
+		da.addToolbarColourSelectedListener(sb.getColourSelectedListener());
 		// da.addSelectShapeListener(sb.getSelectedShapeListener());
 
 		setLayout(new BorderLayout());

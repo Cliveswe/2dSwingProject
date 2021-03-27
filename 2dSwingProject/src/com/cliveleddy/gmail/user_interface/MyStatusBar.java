@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Point;
 import java.util.Map;
 
 import javax.swing.JLabel;
@@ -39,26 +40,37 @@ public class MyStatusBar extends JPanel {
 			Map.entry(SBTextEnum.MOUSE_COORDINATES_TITLE, "Coordinates"),
 			Map.entry(SBTextEnum.SELECTED_COLOUR, "Selected colour"));
 
+	private static Color STATUS_BAR_BACKGROUND_COLOUR = Color.LIGHT_GRAY;
+
 	/**
 	 * An instance of the mouse coordinate object that displays the mouse
 	 * coordinates in the status bar.
 	 */
 	private MyMouseCoordinates myMouseCoordinates = new MyMouseCoordinates(
 			getText(SBTextEnum.MOUSE_COORDINATES_TITLE) + getText(SBTextEnum.END));
+	/**
+	 * An instance of the shape colour object that displays the colour selected from
+	 * the tool bar and displays the choice in the status bar.
+	 */
+	private MyShapeColour myShapeColour = new MyShapeColour(
+			getText(SBTextEnum.SELECTED_COLOUR) + getText(SBTextEnum.END));
 
-	private IMouseLocationListener locationOfMouse;
+	private IDrawingAreaListener<MyDrawingAreaEvent<Point>> locationOfMouse;
+
+	private IDrawingAreaListener<MyDrawingAreaEvent<Color>> toolbarSelectedColour;
 
 	public MyStatusBar() {
 		super();
 		locationOfMouse = new CoordinatesOfMouse();
+		toolbarSelectedColour = new SelectedColourFromToolbar();
 
 		setLayout(new BorderLayout());
 
 		// add a mouse coordinates class
 		add(myMouseCoordinates, BorderLayout.LINE_START);
 		// add a selected colour class
-		add(new MyShapeColour(getText(SBTextEnum.SELECTED_COLOUR) + getText(SBTextEnum.END)), BorderLayout.LINE_END);
-		setBackground(Color.LIGHT_GRAY);
+		add(myShapeColour, BorderLayout.LINE_END);
+		setBackground(STATUS_BAR_BACKGROUND_COLOUR);
 	}
 
 	/**
@@ -72,6 +84,16 @@ public class MyStatusBar extends JPanel {
 	}
 
 	/**
+	 * Get the reference to the instance of object MyShapeColour.
+	 * 
+	 * @return a reference to the object of myShapeColour as type
+	 *         MyMouseCoordinates.
+	 */
+	public MyShapeColour getMyShapeColour() {
+		return myShapeColour;
+	}
+
+	/**
 	 * Get a text description.
 	 * 
 	 * @param key to index the container that holds the text description as Enum.
@@ -81,19 +103,33 @@ public class MyStatusBar extends JPanel {
 		return Text.get(key);
 	}
 
-	public IMouseLocationListener getMouseLocationListener() {
+	/**
+	 * Get the mouse location listener.
+	 * 
+	 * @return the class that is listening for an event.
+	 */
+	public IDrawingAreaListener<MyDrawingAreaEvent<Point>> getMouseLocationListener() {
 		return locationOfMouse;
 	}
 
 	/**
-	 * <h1>Implement the interface class IMouseLocationListener that is used to
-	 * catch an instance of the MouseLocationEvent event.</h1> Then set the mouse
+	 * Get the mouse location listener.
+	 * 
+	 * @return the class that is listening for an event.
+	 */
+	public IDrawingAreaListener<MyDrawingAreaEvent<Color>> getColourSelectedListener() {
+		return toolbarSelectedColour;
+	}
+
+	/**
+	 * <h1>Implement the interface class IDrawingAreaListener that is used to catch
+	 * an instance of the MyDrawingAreaEvent event.</h1> Then set the mouse
 	 * coordinates as string pair.
 	 * 
 	 * @author Clive Leddy
 	 * @version 1.0
 	 */
-	class CoordinatesOfMouse implements IMouseLocationListener {
+	class CoordinatesOfMouse implements IDrawingAreaListener<MyDrawingAreaEvent<Point>> {
 
 		/**
 		 * 
@@ -101,20 +137,51 @@ public class MyStatusBar extends JPanel {
 		 * mouse x and y coordinates to a String. Pass the string coordinates to the
 		 * MyMouseCoordinates class.
 		 * 
-		 * @param event an event object of type MouseLocationEvent.
+		 * @param event an event object of type MyDrawingAreaEvent.
 		 * 
 		 */
 		@Override
-		public void mouseLocationEventOccurred(MouseLocationEvent event) {
+		public void drawingAreaEventOccurred(MyDrawingAreaEvent<Point> event) {
 
-			if (event.getLocation() != null) {
-				getMyMouseCoordinates().setMouseCoordinates(Integer.toString(event.getLocation().x),
-						Integer.toString(event.getLocation().y));
+			if (event.getData() != null) {
+				getMyMouseCoordinates().setMouseCoordinates(Integer.toString(event.getData().x),
+						Integer.toString(event.getData().y));
 			} else {
 				getMyMouseCoordinates().setMouseCoordinates(null, null);
 			}
 		}
+	}
 
+	/**
+	 * <h1>Implement the interface class IDrawingAreaListener that is used to catch
+	 * an instance of the MyDrawingAreaEvent event.</h1> Then set the shape colour
+	 * to the colour selected from the tool bar.
+	 * 
+	 * @author Clive Leddy
+	 * @version 1.0
+	 */
+	class SelectedColourFromToolbar implements IDrawingAreaListener<MyDrawingAreaEvent<Color>> {
+
+		/**
+		 * 
+		 * Query the event object and extract the coordinates of the mouse. Convert the
+		 * mouse x and y coordinates to a String. Pass the string coordinates to the
+		 * MyMouseCoordinates class.
+		 * 
+		 * @param event an event object of type MyDrawingAreaEvent.
+		 * 
+		 */
+		@Override
+		public void drawingAreaEventOccurred(MyDrawingAreaEvent<Color> event) {
+
+			if (event.getData() != null) {
+
+				getMyShapeColour().setShapeBackgroundColour(event.getData());
+
+			} else {
+				getMyShapeColour().setShapeBackgroundColour(Color.WHITE);
+			}
+		}
 	}
 
 	/**
@@ -177,26 +244,37 @@ public class MyStatusBar extends JPanel {
 
 	/**
 	 * <h1>Show the selected colour.</h1>
+	 * <p>
+	 * Add the method that changes the label background colour.
 	 * 
 	 * @author Clive Leddy
-	 * @version 1.0
+	 * @version 1.1
 	 *
 	 */
 	class MyShapeColour extends MyStatusBarComponents {
 		private static final long serialVersionUID = 7172717267359201923L;
+		private JLabel imageLabel;
 
 		public MyShapeColour(String title) {
 			super();
 			add(new JLabel(title));
 
-			// TODO code for this label will be modified to show a shape instead
-			JLabel imageLabel = new JLabel();
+			imageLabel = new JLabel();
 			imageLabel.setOpaque(true);
-			imageLabel.setBackground(Color.GREEN);
+			imageLabel.setBackground(null);
 			imageLabel.setPreferredSize(new Dimension(20, 20));
+			setShapeBackgroundColour(STATUS_BAR_BACKGROUND_COLOUR);
 			// add(new JLabel("image"));
 			add(imageLabel);
+		}
 
+		/**
+		 * Set the background colour of the imageLabel.
+		 * 
+		 * @param background colour c as type Color.
+		 */
+		public void setShapeBackgroundColour(Color c) {
+			imageLabel.setBackground(c);
 		}
 	}
 }

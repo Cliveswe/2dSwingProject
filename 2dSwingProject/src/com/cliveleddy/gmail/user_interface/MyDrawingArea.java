@@ -19,9 +19,12 @@ import javax.swing.event.EventListenerList;
  * <h1>Create a drawing panel the contains a tool bar and a drawing area.</h1>
  * The tool bar contains controls for drawing shapes with a selected colour. The
  * drawing ares is where the shape is drawn.
+ * <p>
+ * Added listeners object for mouse location in the drawing area. Added
+ * listeners object for selected shape colour in the drawing area tool bar.
  * 
  * @author Clive Leddy
- * @version 1.0
+ * @version 1.2
  *
  */
 
@@ -53,6 +56,8 @@ public class MyDrawingArea extends JPanel {
 
 	// a list of listeners for the mouse location.
 	private EventListenerList mouseLocationListenerList = new EventListenerList();
+	// a list of listeners for the tool bar colour selection
+	private EventListenerList toolbarColourSelectListenerList = new EventListenerList();
 
 	public MyDrawingArea() {
 		super();
@@ -71,34 +76,56 @@ public class MyDrawingArea extends JPanel {
 	/**
 	 * The mouse has moved inform all the listeners.
 	 * 
-	 * @param event mle object as MouseLocationEvent
+	 * @param <T>
+	 * 
+	 * @param event mle object as MyDrawingAreaEvent
 	 */
-	public void firedMouseLocationEvent(MouseLocationEvent mle) {
+	@SuppressWarnings("unchecked")
+	public void firedMouseLocationEvent(MyDrawingAreaEvent<Point> mle) {
 		Object[] listerners = mouseLocationListenerList.getListenerList();
 
 		for (int index = 0; index < listerners.length; index += 2) {
-			if (listerners[index] == IMouseLocationListener.class) {
-				((IMouseLocationListener) listerners[index + 1]).mouseLocationEventOccurred(mle);
+			if (listerners[index] == IDrawingAreaListener.class) {
+				((IDrawingAreaListener<MyDrawingAreaEvent<Point>>) listerners[index + 1]).drawingAreaEventOccurred(mle);
 			}
 		}
 	}
 
 	/**
+	 * The mouse has moved inform all the listeners.
+	 * 
+	 * @param <T>
+	 * 
+	 * @param event mle object as MyDrawingAreaEvent
+	 */
+	@SuppressWarnings("unchecked")
+	public void firedColourSelectedEvent(MyDrawingAreaEvent<Color> mle) {
+		Object[] listerners = toolbarColourSelectListenerList.getListenerList();
+
+		for (int index = 0; index < listerners.length; index += 2) {
+			if (listerners[index] == IDrawingAreaListener.class) {
+				((IDrawingAreaListener<MyDrawingAreaEvent<Color>>) listerners[index + 1]).drawingAreaEventOccurred(mle);
+			}
+		}
+	}
+
+	// MOUSE LOCATION
+	/**
 	 * Add a listener that is listening for a change in the mouse location.
 	 * 
-	 * @param a reference to a listener of type IMouseLocationListener.
+	 * @param a reference to a listener of type IDrawingAreaListener.
 	 */
-	public void addMouseLocationListener(IMouseLocationListener listener) {
-		mouseLocationListenerList.add(IMouseLocationListener.class, listener);
+	public void addMouseLocationListener(IDrawingAreaListener<MyDrawingAreaEvent<Point>> listener) {
+		mouseLocationListenerList.add(IDrawingAreaListener.class, listener);
 	}
 
 	/**
 	 * Remove a listener that is listening for a change in the mouse location.
 	 * 
-	 * @param a reference to a listener of type IMouseLocationListener.
+	 * @param a reference to a listener of type IDrawingAreaListener.
 	 */
-	public void removeIMouseLocationListener(IMouseLocationListener listener) {
-		mouseLocationListenerList.remove(IMouseLocationListener.class, listener);
+	public void removeIMouseLocationListener(IDrawingAreaListener<Point> listener) {
+		mouseLocationListenerList.remove(IDrawingAreaListener.class, listener);
 	}
 
 	/**
@@ -107,7 +134,46 @@ public class MyDrawingArea extends JPanel {
 	 * @param locationPoint as a Point
 	 */
 	public void setMousePointerLocation(Point locationPoint) {
-		firedMouseLocationEvent(new MouseLocationEvent(this, locationPoint));
+		firedMouseLocationEvent(new MyDrawingAreaEvent<Point>(this, locationPoint));
+	}
+
+	// TOOL BAR COLOUR SELECTED
+	/**
+	 * Add a listener that is listening for a colour selected from the tool bar.
+	 * 
+	 * @param a reference to a listener of type IDrawingAreaListener.
+	 */
+	public void getColourSelectedListener(IDrawingAreaListener<MyDrawingAreaEvent<Color>> listener) {
+		mouseLocationListenerList.add(IDrawingAreaListener.class, listener);
+	}
+
+	/**
+	 * Add a listener that is listening for a colour selection from the tool bar.
+	 * 
+	 * @param a reference to a listener of type IDrawingAreaListener
+	 */
+	public void addToolbarColourSelectedListener(IDrawingAreaListener<MyDrawingAreaEvent<Color>> listener) {
+		toolbarColourSelectListenerList.add(IDrawingAreaListener.class, listener);
+
+	}
+
+	/**
+	 * Remove a listener that is listening for a colour selection from the tool bar.
+	 * 
+	 * @param a reference to a listener of type IDrawingAreaListener.
+	 */
+	public void removeToolbarColourSelectedListener(IDrawingAreaListener<MyDrawingAreaEvent<Color>> listener) {
+		toolbarColourSelectListenerList.add(IDrawingAreaListener.class, listener);
+
+	}
+
+	/**
+	 * Set the current location of the mouse pointer.
+	 * 
+	 * @param locationPoint as a Point
+	 */
+	public void setSelectedColour(Color colorSelected) {
+		firedColourSelectedEvent(new MyDrawingAreaEvent<Color>(this, colorSelected));
 	}
 
 	/**
@@ -176,7 +242,7 @@ public class MyDrawingArea extends JPanel {
 					colourSelectorLabel.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseClicked(MouseEvent e) {
-							System.out.println(colourSelectorLabel.getBackground().toString());
+							setSelectedColour(colourSelectorLabel.getBackground());
 						}
 					});
 
