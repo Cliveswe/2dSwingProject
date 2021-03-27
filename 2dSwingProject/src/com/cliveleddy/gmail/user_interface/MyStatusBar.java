@@ -253,28 +253,27 @@ public class MyStatusBar extends JPanel {
 	 */
 	class MyShapeColour extends MyStatusBarComponents {
 		private static final long serialVersionUID = 7172717267359201923L;
-		private JLabel imageLabel;
+		private JLabel shapeLabel;
 
 		public MyShapeColour(String title) {
 			super();
 			add(new JLabel(title));
 
-			imageLabel = new JLabel();
-			imageLabel.setOpaque(true);
-			imageLabel.setBackground(null);
-			imageLabel.setPreferredSize(new Dimension(20, 20));
+			shapeLabel = new JLabel();
+			shapeLabel.setOpaque(true);
+			shapeLabel.setPreferredSize(new Dimension(20, 20));
 			setShapeBackgroundColour(STATUS_BAR_BACKGROUND_COLOUR);
 			// add(new JLabel("image"));
-			add(imageLabel);
+			add(shapeLabel);
 		}
 
 		/**
-		 * Set the background colour of the imageLabel.
+		 * Set the background colour of the shapeLabel.
 		 * 
 		 * @param background colour c as type Color.
 		 */
 		public void setShapeBackgroundColour(Color c) {
-			imageLabel.setBackground(c);
+			shapeLabel.setBackground(c);
 		}
 	}
 }

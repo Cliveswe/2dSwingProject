@@ -10,7 +10,6 @@ import java.util.EventListener;
  * @version 1.0
  *
  */
-//public interface IDrawingAreaListener extends EventListener {
 public interface IDrawingAreaListener<T> extends EventListener {
 	/**
 	 * Method that is used to retrieve data from the event object.
@@ -18,8 +17,6 @@ public interface IDrawingAreaListener<T> extends EventListener {
 	 * @param drawingAreaEvent object that describes the generic data in the event
 	 *                         as type MyDrawingAreaEvent.
 	 */
-	// public void mouseLocationEventOccurred(MyDrawingAreaEvent
-	// mouseLocationEvent);
 	public void drawingAreaEventOccurred(T drawingAreaEvent);
 
 }

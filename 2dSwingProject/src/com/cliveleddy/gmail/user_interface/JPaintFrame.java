@@ -14,6 +14,9 @@ import javax.swing.UnsupportedLookAndFeelException;
  * <p>
  * <h1>Version 2</h1> The class has been renamed to JPaintFrame. New click
  * features will be added.
+ * <p>
+ * This class acts as a controller class wiring up listener event objects to
+ * source event objects.
  * 
  * @author Clive Leddy
  * @version 2.0
@@ -68,7 +71,7 @@ public class JPaintFrame extends JFrame {
 		MyStatusBar sb = new MyStatusBar();
 		MyDrawingArea da = new MyDrawingArea();
 
-		// add listeners for UI events
+		// add listeners for the different UI events
 		da.addMouseLocationListener(sb.getMouseLocationListener());
 		da.addToolbarColourSelectedListener(sb.getColourSelectedListener());
 		// da.addSelectShapeListener(sb.getSelectedShapeListener());
@@ -76,10 +79,9 @@ public class JPaintFrame extends JFrame {
 		setLayout(new BorderLayout());
 		// add the menu bar to the layout
 		add(new MyMenuBar(), BorderLayout.PAGE_START);
-//		add(new MyDrawingArea(), BorderLayout.CENTER);
+		// add the drawing area to the layout.
 		add(da, BorderLayout.CENTER);
 		// add the status bar to the layout
-		// add(new MyStatusBar(), BorderLayout.PAGE_END);
 		add(sb, BorderLayout.PAGE_END);
 	}
 

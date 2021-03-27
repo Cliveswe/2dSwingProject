@@ -11,11 +11,9 @@ import java.util.EventObject;
  */
 public class MyDrawingAreaEvent<T> extends EventObject {
 	private static final long serialVersionUID = 9118907373388612418L;
-	// mouse coordinates as a Point object
-	// private Point data = new Point();
+	// generic data package
 	private T data;
 
-	// public MyDrawingAreaEvent(Object source, Point p) {
 	public MyDrawingAreaEvent(Object source, T p) {
 		super(source);
 		data = p;
@@ -26,7 +24,6 @@ public class MyDrawingAreaEvent<T> extends EventObject {
 	 * 
 	 * @return data package as a generic type.
 	 */
-	// public Point getLocation() {
 	public T getData() {
 		return data;
 	}

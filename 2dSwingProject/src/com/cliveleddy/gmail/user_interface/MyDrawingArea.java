@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -39,7 +40,7 @@ public class MyDrawingArea extends JPanel {
 	};
 
 	// colours used in the tool bar.
-	public static HashMap<coloursEnum, Color> Colours = new HashMap<>() {
+	public static Map<coloursEnum, Color> Colours = new HashMap<>() {
 		private static final long serialVersionUID = -1344271642148893155L;
 
 		{
@@ -226,8 +227,9 @@ public class MyDrawingArea extends JPanel {
 		class ColourChoices extends JPanel {
 			private static final long serialVersionUID = 2937968855860466342L;
 			private int rowNumber = 1;
+
 			// private HashMap<coloursEnum, JButton> ColourTool = new HashMap<>();
-			private HashMap<coloursEnum, JLabel> ColourTool = new HashMap<>();
+			private Map<coloursEnum, JLabel> ColourTool = new HashMap<>();
 
 			public ColourChoices() {
 				super();
