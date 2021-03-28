@@ -31,7 +31,7 @@ public class Step5 {
 		// This will be explained in Java III (the lesson about threads).
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				//
+				// Start the app
 				new JPaintFrame().Initialise();
 			}
 		});

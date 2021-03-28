@@ -46,7 +46,6 @@ public class JPaintFrame extends JFrame {
 
 	public JPaintFrame() {
 		super();
-
 	}
 
 	/**
@@ -98,7 +97,7 @@ public class JPaintFrame extends JFrame {
 
 		setLayout(new BorderLayout());
 		// add the menu bar to the layout
-		add(new MyMenuBar(), BorderLayout.PAGE_START);
+		add(new MyMenuBar(this), BorderLayout.PAGE_START);
 		// add the drawing area to the layout.
 		add(da, BorderLayout.CENTER);
 		// add the status bar to the layout
