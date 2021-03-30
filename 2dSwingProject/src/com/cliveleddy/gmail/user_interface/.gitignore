@@ -15,3 +15,13 @@
 /MyStatusBar.class
 /JPaintFrame$UITextEnum.class
 /JPaintFrame.class
+/IDrawingAreaListener.class
+/MyDrawingArea$MyDrawingPanel$1.class
+/MyDrawingArea$MyDrawingPanel$2.class
+/MyDrawingArea$MyToolRow$ColourChoices$1.class
+/MyDrawingAreaEvent.class
+/MyMenuBar$MyFunctionalInterface.class
+/MyMenuBar$myJMenuItem.class
+/MyStatusBar$CoordinatesOfMouse.class
+/MyStatusBar$SelectedColourFromToolbar.class
+/MyMenuBar$IMyFunctionalInterface.class

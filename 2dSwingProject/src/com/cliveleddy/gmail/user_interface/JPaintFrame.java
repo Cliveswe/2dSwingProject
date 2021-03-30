@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.cliveleddy.gmail.model.Drawing;
+
 /**
  * <h1>Class JPaintFrame</h1> This is the application container window. It
  * extends the JFrame swing and contains components used in this application.
@@ -20,12 +22,20 @@ import javax.swing.UnsupportedLookAndFeelException;
  * <p>
  * This class acts as a controller class wiring up listener event objects to
  * source event objects.
+ * <p>
+ * <h2>Added an event listener.</h2> Added an event listener listening for the
+ * artwork's new or updated title and author. The title and author are used to
+ * update the JFrame's title.
+ * <p>
+ * <h2>Step 6</h2> The class MyDrawingArea under went some structural changes.
+ * Thus the status bar listener had to be registered in a different method in
+ * the drawing area.
  * 
  * @author Clive Leddy
- * @version 2.0
+ * @version 2.1
  *
  */
-public class JPaintFrame extends JFrame {
+public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawingAreaEvent<Drawing>> {
 	private static final long serialVersionUID = -3289281159035541953L;
 	private final int FRAME_WIDTH = 800;
 	private final int FRAME_HEIGHT = 800;
@@ -66,7 +76,7 @@ public class JPaintFrame extends JFrame {
 		SetFrameIcon();
 		SetLookAndFeel();
 		SetWindowSize();
-		SetFrameTitle();
+		SetFrameTitle(getText(UITextEnum.TITLE));
 		SetLayout();
 		setVisible(true);
 	}
@@ -89,23 +99,25 @@ public class JPaintFrame extends JFrame {
 	private void SetLayout() {
 		MyStatusBar sb = new MyStatusBar();
 		MyDrawingArea da = new MyDrawingArea();
+		MyMenuBar mb = new MyMenuBar(this);
 
 		// add listeners for the different UI events
-		da.addMouseLocationListener(sb.getMouseLocationListener());
+		da.getMyDrawingPanel().addMouseLocationListener(sb.getMouseLocationListener());
 		da.addToolbarColourSelectedListener(sb.getColourSelectedListener());
-		// da.addSelectShapeListener(sb.getSelectedShapeListener());
+		mb.addMenuBarDrawingListener(this);
 
 		setLayout(new BorderLayout());
 		// add the menu bar to the layout
-		add(new MyMenuBar(this), BorderLayout.PAGE_START);
+		add(mb, BorderLayout.PAGE_START);
 		// add the drawing area to the layout.
 		add(da, BorderLayout.CENTER);
 		// add the status bar to the layout
 		add(sb, BorderLayout.PAGE_END);
 	}
 
-	private void SetFrameTitle() {
-		this.setTitle(getText(UITextEnum.TITLE));
+	private void SetFrameTitle(String frameTitle) {
+		// setTitle(getText(UITextEnum.TITLE));
+		setTitle(frameTitle);
 	}
 
 	private void SetLookAndFeel() {
@@ -139,5 +151,53 @@ public class JPaintFrame extends JFrame {
 		// the window is not re-sizable
 		// setResizable(true);
 
+	}
+
+	/**
+	 * 
+	 * Query the event object and extract the title and author of the drawing.
+	 * Construct the title and author in the object drawingAreasEvent to a String.
+	 * This string should be amended to the application title.
+	 * 
+	 * @param event an event object of type MyDrawingAreaEvent.
+	 * 
+	 */
+	@Override
+	public void drawingAreaEventOccurred(MyDrawingAreaEvent<Drawing> drawingAreaEvent) {
+		Drawing d = null;
+
+		if (drawingAreaEvent != null) {
+			d = new Drawing();
+			d = drawingAreaEvent.getData();
+			if (d != null) {
+				updateFrameTitle(d.getName(), d.getAuthor());
+			} else {
+				updateFrameTitle("", "");
+			}
+		} else {
+			System.out.println("Something went wrong in drawingAreaEventOccurred method");
+		}
+	}
+
+	/**
+	 * Create a new title for the JFrame title.
+	 * 
+	 * @param title  the title of the artwork as a String.
+	 * @param author the authors name of the artwork as a String.
+	 */
+	private void updateFrameTitle(String title, String author) {
+		String str = getText(UITextEnum.TITLE);
+
+		if (!title.isBlank() && !author.isBlank()) {
+			str += " - " + title + " by " + author;
+		}
+		if (!title.isBlank() && author.isBlank()) {
+			str += " - " + title;
+		}
+		if (title.isBlank() && !author.isBlank()) {
+			str += " - " + author;
+		}
+
+		SetFrameTitle(str);
 	}
 }
