@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
 
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -74,7 +73,7 @@ public class MyMenuBar extends JMenuBar {
 			Map.entry(MBTextEnum.SHAPE, ".shape"));
 
 	// reference to the main JFrame
-	protected JFrame jPaintFrame;
+	protected JPaintFrame jPaintFrame;
 
 	// a reference to a drawing d
 	private Drawing d;
@@ -82,7 +81,7 @@ public class MyMenuBar extends JMenuBar {
 	// a list of listeners for the menu bar drawing object.
 	private EventListenerList menuBarDrawingListenerList = new EventListenerList();
 
-	public MyMenuBar(JFrame jPaintFrame) {
+	public MyMenuBar(JPaintFrame jPaintFrame) {
 		super();
 		this.jPaintFrame = jPaintFrame;
 		d = null;

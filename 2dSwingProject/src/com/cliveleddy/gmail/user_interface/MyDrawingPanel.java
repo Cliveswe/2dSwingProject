@@ -2,6 +2,7 @@ package com.cliveleddy.gmail.user_interface;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -9,6 +10,8 @@ import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
+
+import com.cliveleddy.gmail.model.Drawing;
 
 /**
  * <h1>The drawing area for a shape.</h1> Added a MouseMotionAdapter to the
@@ -26,17 +29,52 @@ import javax.swing.event.EventListenerList;
 class MyDrawingPanel extends JPanel {
 	private static final long serialVersionUID = 1223323159512490642L;
 
+	private Drawing drawing;
+
 	// a list of listeners for the mouse location.
 	private EventListenerList mouseLocationListenerList = new EventListenerList();
 
 	public MyDrawingPanel() {
 		super();
-		setMouseMotionListener();
+		drawing = new Drawing();
+		initialise();
+	}
 
-		// Temporary code to set the background colour for testing.
+	public MyDrawingPanel(Drawing d) {
+		super();
+		drawing = d;
+		initialise();
+	}
+
+	/**
+	 * Initialise the class.
+	 */
+	private void initialise() {
+		setLayout(new FlowLayout());
+		setMouseMotionListener();
 		setBackground(Color.WHITE);
 		setMinimumSize(new Dimension(200, 200));
-		// TODO at a later stage add a free hand drawing area.
+	}
+
+	/**
+	 * Set the class field to a new drawing then render it.
+	 * 
+	 * @param d an object containing a drawing of type Drawing.
+	 */
+	public void setDrawing(Drawing d) {
+		if (d != null) {
+			drawing = d;
+			// TODO render drawing d.
+		}
+	}
+
+	/**
+	 * Get the current drawing.
+	 * 
+	 * @return a drawing of type Drawing.
+	 */
+	public Drawing getDrawing() {
+		return drawing;
 	}
 
 	/**
@@ -47,17 +85,13 @@ class MyDrawingPanel extends JPanel {
 		// set the mouse location within the drawing area
 		addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent me) {
-				// setMousePointerLocation to the event object me Point;
-				// setMousePointerLocation(me.getPoint());
-				// Set the current location of the mouse pointer from the even object.
+				// Set the current location of the mouse pointer from the even object me Point.
 				firedMouseLocationEvent(new MyDrawingAreaEvent<Point>(this, me.getPoint()));
 			}
 		});
 		// set the mouse location to null when the mouse exits the drawing area
 		addMouseListener(new MouseAdapter() {
 			public void mouseExited(MouseEvent me) {
-				// setMousePointerLocation to a null;
-				// setMousePointerLocation(null);
 				// Set the current location of the mouse pointer to null.
 				firedMouseLocationEvent(new MyDrawingAreaEvent<Point>(this, null));
 			}
@@ -67,7 +101,7 @@ class MyDrawingPanel extends JPanel {
 	/**
 	 * The mouse has moved inform all the listeners.
 	 * 
-	 * @param <T>
+	 * @param <T>   generic type parameter of type Point.
 	 * 
 	 * @param event mle object as MyDrawingAreaEvent
 	 */

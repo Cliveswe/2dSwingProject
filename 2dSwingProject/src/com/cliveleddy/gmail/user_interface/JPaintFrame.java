@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -27,12 +28,14 @@ import com.cliveleddy.gmail.model.Drawing;
  * artwork's new or updated title and author. The title and author are used to
  * update the JFrame's title.
  * <p>
- * <h2>Step 6</h2> The class MyDrawingArea under went some structural changes.
- * Thus the status bar listener had to be registered in a different method in
- * the drawing area.
+ * <h1>Step 6</h1> The class MyDrawingArea under went some structural changes.
+ * It was broken down into 2 new classes, MyDrawingPanel and MyToolRow. The
+ * wiring for event handling has been modified. Finally, the class MyDrawingArea
+ * has been deleted from the project. The motivation for this change is that the
+ * menu tool bars logic will be developed.
  * 
  * @author Clive Leddy
- * @version 2.1
+ * @version 2.2
  *
  */
 public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawingAreaEvent<Drawing>> {
@@ -98,19 +101,27 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 
 	private void SetLayout() {
 		MyStatusBar sb = new MyStatusBar();
-		MyDrawingArea da = new MyDrawingArea();
+		MyDrawingPanel dp = new MyDrawingPanel();
+		MyToolRow tr = new MyToolRow();
 		MyMenuBar mb = new MyMenuBar(this);
 
 		// add listeners for the different UI events
-		da.getMyDrawingPanel().addMouseLocationListener(sb.getMouseLocationListener());
-		da.addToolbarColourSelectedListener(sb.getColourSelectedListener());
+		dp.addMouseLocationListener(sb.getMouseLocationListener());
+		tr.addToolbarColourSelectedListener(sb.getColourSelectedListener());
 		mb.addMenuBarDrawingListener(this);
 
 		setLayout(new BorderLayout());
 		// add the menu bar to the layout
 		add(mb, BorderLayout.PAGE_START);
+
 		// add the drawing area to the layout.
-		add(da, BorderLayout.CENTER);
+		JPanel drawingArea = new JPanel();
+		drawingArea.setLayout(new BorderLayout());
+		tr.setPreferredSize(new Dimension(0, MyToolRow.TOOL_BAR_MIN_HEIGHT));
+		drawingArea.add(tr, BorderLayout.NORTH);
+		drawingArea.add(dp, BorderLayout.CENTER);
+		add(drawingArea, BorderLayout.CENTER);
+
 		// add the status bar to the layout
 		add(sb, BorderLayout.PAGE_END);
 	}
