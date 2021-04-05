@@ -11,6 +11,7 @@ import java.util.EventListener;
  *
  */
 public interface IDrawingAreaListener<T> extends EventListener {
+
 	/**
 	 * Method that is used to retrieve data from the event object.
 	 * 
@@ -18,5 +19,4 @@ public interface IDrawingAreaListener<T> extends EventListener {
 	 *                         as type MyDrawingAreaEvent.
 	 */
 	public void drawingAreaEventOccurred(T drawingAreaEvent);
-
 }

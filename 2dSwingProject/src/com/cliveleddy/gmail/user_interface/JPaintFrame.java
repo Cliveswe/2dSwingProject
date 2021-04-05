@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -28,59 +27,72 @@ import com.cliveleddy.gmail.model.Drawing;
  * artwork's new or updated title and author. The title and author are used to
  * update the JFrame's title.
  * <p>
- * <h1>Step 6</h1> The class MyDrawingArea under went some structural changes.
- * It was broken down into 2 new classes, MyDrawingPanel and MyToolRow. The
- * wiring for event handling has been modified. Finally, the class MyDrawingArea
- * has been deleted from the project. The motivation for this change is that the
- * menu tool bars logic will be developed.
+ * <h1>Step 6</h1> The class MyDrawingArea has been removed from the
+ * application. It was broken down into 2 new classes, DrawingPanel and
+ * MyToolRow. The motivation for this change is that the menu tool bars logic
+ * will be developed. The wiring for event handling has been modified.
+ * 
  * 
  * @author Clive Leddy
  * @version 2.2
  *
  */
 public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawingAreaEvent<Drawing>> {
+
 	private static final long serialVersionUID = -3289281159035541953L;
+
 	private final int FRAME_WIDTH = 800;
+
 	private final int FRAME_HEIGHT = 800;
+
 	private final int FRAME_MIN_WIDTH = 400;
+
 	private final int FRAME_MIN_HEIGHT = 300;
+
+	// Drawing Panel
+	private DrawingPanel dp;
 
 	/**
 	 * The key values to get a text description.
-	 */
-	public static enum UITextEnum {
-		TITLE
-	};
-
-	/**
-	 * A dictionary that is indexed by a key.
-	 */
-	public static Map<UITextEnum, String> Text = Map.ofEntries(Map.entry(UITextEnum.TITLE, "JPaint"));
-
-	public JPaintFrame() {
-		super();
-	}
-
-	/**
-	 * Get a text description.
 	 * 
-	 * @param key to index the container that holds the text description as Enum.
-	 * @return a String.
+	 * @author Clive leddy
+	 * @version 1.0
+	 *
 	 */
-	public static String getText(UITextEnum key) {
-		return Text.get(key);
+	public static enum PaintFrameEnum {
+
+		TITLE("JPaint");
+
+		private final String label;
+
+		private PaintFrameEnum(String label) {
+
+			this.label = label;
+		}
+
+		public String label() {
+
+			return label;
+		}
 	}
 
 	/**
 	 * Set up and initialise the application window.
 	 */
 	public void Initialise() {
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		SetFrameIcon();
+
 		SetLookAndFeel();
+
 		SetWindowSize();
-		SetFrameTitle(getText(UITextEnum.TITLE));
+
+		SetFrameTitle(PaintFrameEnum.TITLE.label);
+
 		SetLayout();
+
 		setVisible(true);
 	}
 
@@ -88,11 +100,15 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 	 * Add an icon to the top left of the JFrame
 	 */
 	public void SetFrameIcon() {
+
 		BufferedImage img = null;
+
 		try {
+
 			img = ImageIO.read(getClass().getResource("../resource/favicon-32x32.png"));
 
 		} catch (IOException e) {
+
 			e.printStackTrace();
 		}
 
@@ -100,26 +116,40 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 	}
 
 	private void SetLayout() {
+
 		MyStatusBar sb = new MyStatusBar();
-		MyDrawingPanel dp = new MyDrawingPanel();
+
+		dp = new DrawingPanel();
+
 		MyToolRow tr = new MyToolRow();
+
 		MyMenuBar mb = new MyMenuBar(this);
 
 		// add listeners for the different UI events
 		dp.addMouseLocationListener(sb.getMouseLocationListener());
+
 		tr.addToolbarColourSelectedListener(sb.getColourSelectedListener());
+		tr.addToolbarColourSelectedListener(dp.getColourSelectedListener());
+		tr.addToolbarShapeSelectedListener(dp.getShapeSelectedListener());
+
 		mb.addMenuBarDrawingListener(this);
 
 		setLayout(new BorderLayout());
+
 		// add the menu bar to the layout
 		add(mb, BorderLayout.PAGE_START);
 
 		// add the drawing area to the layout.
 		JPanel drawingArea = new JPanel();
+
 		drawingArea.setLayout(new BorderLayout());
+
 		tr.setPreferredSize(new Dimension(0, MyToolRow.TOOL_BAR_MIN_HEIGHT));
+
 		drawingArea.add(tr, BorderLayout.NORTH);
+
 		drawingArea.add(dp, BorderLayout.CENTER);
+
 		add(drawingArea, BorderLayout.CENTER);
 
 		// add the status bar to the layout
@@ -127,33 +157,43 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 	}
 
 	private void SetFrameTitle(String frameTitle) {
+
 		// setTitle(getText(UITextEnum.TITLE));
 		setTitle(frameTitle);
 	}
 
 	private void SetLookAndFeel() {
+
 		try {
+
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		} catch (ClassNotFoundException e) {
+
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InstantiationException e) {
+
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
+
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedLookAndFeelException e) {
+
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	private void SetWindowSize() {
+
 		// set the size of the window
 		setSize(FRAME_WIDTH, FRAME_HEIGHT);
+
 		// set the minimum window size
 		setMinimumSize(new Dimension(FRAME_MIN_WIDTH, FRAME_MIN_HEIGHT));
+
 		// this.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		// setBounds(POSITION_X, POSITION_Y, FRAME_WIDTH, FRAME_HEIGHT);
 
@@ -162,6 +202,11 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 		// the window is not re-sizable
 		// setResizable(true);
 
+	}
+
+	protected DrawingPanel getDrawingPanel() {
+
+		return dp;
 	}
 
 	/**
@@ -173,19 +218,66 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 	 * @param event an event object of type MyDrawingAreaEvent.
 	 * 
 	 */
-	@Override
 	public void drawingAreaEventOccurred(MyDrawingAreaEvent<Drawing> drawingAreaEvent) {
-		Drawing d = null;
 
 		if (drawingAreaEvent != null) {
-			d = new Drawing();
-			d = drawingAreaEvent.getData();
-			if (d != null) {
-				updateFrameTitle(d.getName(), d.getAuthor());
+			if (drawingAreaEvent.getData() != null) {
+
+				// New Menu
+				if (MyMenuBar.MenuBarItemEnum.NEW.label() == drawingAreaEvent.getId()) {
+					// updateFrameTitle(drawingAreaEvent.getData().getName(),
+					// drawingAreaEvent.getData().getAuthor());
+					dp.setDrawing(drawingAreaEvent.getData());
+
+					updateFrameTitle(dp.getDrawing().getName(), dp.getDrawing().getAuthor());
+				}
+				// Load Menu
+				if (MyMenuBar.MenuBarItemEnum.LOAD.label() == drawingAreaEvent.getId()) {
+					// updateFrameTitle(drawingAreaEvent.getData().getName(),
+					// drawingAreaEvent.getData().getAuthor());
+
+					if (!dp.getDrawing().isEmpty()) {
+
+						dp.addDrawing(drawingAreaEvent.getData());
+						// dp.printComponents(dp.getGraphics());
+					} else {
+
+						dp.setDrawing(drawingAreaEvent.getData());
+					}
+
+					updateFrameTitle(dp.getDrawing().getName(), dp.getDrawing().getAuthor());
+				}
+				// Edit Name
+				if (MyMenuBar.MenuBarItemEnum.NAME.label() == drawingAreaEvent.getId()) {
+					// updateFrameTitle(drawingAreaEvent.getData().getName(),
+					// drawingAreaEvent.getData().getAuthor());
+					dp.getDrawing().setName(drawingAreaEvent.getData().getName());
+
+					updateFrameTitle(dp.getDrawing().getName(), dp.getDrawing().getAuthor());
+				}
+				// Edit Author
+				if (MyMenuBar.MenuBarItemEnum.AUTHOR.label() == drawingAreaEvent.getId()) {
+					// updateFrameTitle(drawingAreaEvent.getData().getName(),
+					// drawingAreaEvent.getData().getAuthor());
+					dp.getDrawing().setAuthor(drawingAreaEvent.getData().getAuthor());
+
+					updateFrameTitle(dp.getDrawing().getName(), dp.getDrawing().getAuthor());
+				}
+				// Edit Undo
+				if (MyMenuBar.MenuBarItemEnum.UNDO.label() == drawingAreaEvent.getId()) {
+
+					dp.getDrawing().removeLastShape();
+
+					dp.setDrawing(dp.getDrawing());
+
+					updateFrameTitle(dp.getDrawing().getName(), dp.getDrawing().getAuthor());
+				}
 			} else {
+
 				updateFrameTitle("", "");
 			}
 		} else {
+
 			System.out.println("Something went wrong in drawingAreaEventOccurred method");
 		}
 	}
@@ -197,18 +289,25 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 	 * @param author the authors name of the artwork as a String.
 	 */
 	private void updateFrameTitle(String title, String author) {
-		String str = getText(UITextEnum.TITLE);
+
+		String str = PaintFrameEnum.TITLE.label;
 
 		if (!title.isBlank() && !author.isBlank()) {
+
 			str += " - " + title + " by " + author;
 		}
+
 		if (!title.isBlank() && author.isBlank()) {
+
 			str += " - " + title;
 		}
+
 		if (title.isBlank() && !author.isBlank()) {
+
 			str += " - " + author;
 		}
 
 		SetFrameTitle(str);
 	}
+
 }

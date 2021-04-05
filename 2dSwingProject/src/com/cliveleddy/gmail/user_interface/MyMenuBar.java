@@ -2,6 +2,7 @@ package com.cliveleddy.gmail.user_interface;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JMenu;
@@ -10,7 +11,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.event.EventListenerList;
 
+import com.cliveleddy.gmail.model.Circle;
 import com.cliveleddy.gmail.model.Drawing;
+import com.cliveleddy.gmail.model.Rectangle;
+import com.cliveleddy.gmail.model.Shape;
 
 /**
  * <h1>Step 4</h1> Create the applications menu bar and add items to each menu.
@@ -18,9 +22,16 @@ import com.cliveleddy.gmail.model.Drawing;
  * <p>
  * <h1>Step 5</h1> Add the action listeners to each of the menu items. These
  * Listeners will in turn perform tasks.
+ * <h1>Step 6</h1>Added additional logic to the menu items. In addition,
+ * replacing both the MBTextEnum and the Dictionary Text with a Enum class
+ * called MenuBarItemEnum. This makes for a cleaner code style. Also the Enum
+ * class allows for additional logic at a later date. In the actionPerfromed
+ * method all the if logic has been replaced with a
+ * <h2>Command Design Pattern</h2>. This pattern allows for additional logic to
+ * be added to classes that implement the different commands from the menu.
  * 
  * @author Clive Leddy
- * @version 1.1
+ * @version 1.3
  */
 public class MyMenuBar extends JMenuBar {
 	private static final long serialVersionUID = -1336076929035881984L;
@@ -48,64 +59,85 @@ public class MyMenuBar extends JMenuBar {
 		public R execute(T t);
 	}
 
-	/**
-	 * The key values to get a text description.
-	 */
-	public static enum MBTextEnum {
-		FILE, NEW, SAVE_AS, LOAD, EXIT, EDIT, UNDO, NAME, AUTHOR, DOT, NEW_DRAWING_TITLE_PROMPT, NEW_AUTHOR_NAME_PROMPT,
-		SAVE_AS_PROMPT, LOAD_PROMPT, COLON, SHAPE, DRAWING_TITLE, DRAWING_AUTHOR
-	};
+	private interface ICommand {
+		void execute();
+	}
 
 	/**
-	 * A dictionary that is indexed by a key.
+	 * <h1>Interface class ILabeled.</h1> This is used to get a Enum as a string.
+	 * 
+	 * @author Clive Leddy
+	 * @version 1.0
+	 *
 	 */
-	public static Map<MBTextEnum, String> Text = Map.ofEntries(Map.entry(MBTextEnum.FILE, "File"),
-			Map.entry(MBTextEnum.NEW, "New"), Map.entry(MBTextEnum.SAVE_AS, "Save as"),
-			Map.entry(MBTextEnum.LOAD, "Load"), Map.entry(MBTextEnum.EXIT, "Exit"), Map.entry(MBTextEnum.EDIT, "Edit"),
-			Map.entry(MBTextEnum.UNDO, "Undo"), Map.entry(MBTextEnum.NAME, "Name"),
-			Map.entry(MBTextEnum.AUTHOR, "Author"), Map.entry(MBTextEnum.DOT, "..."),
-			Map.entry(MBTextEnum.NEW_DRAWING_TITLE_PROMPT, "Enter new title of the drawing"),
-			Map.entry(MBTextEnum.NEW_AUTHOR_NAME_PROMPT, "Enter new author of the drawing"),
-			Map.entry(MBTextEnum.SAVE_AS_PROMPT, "Save drawing to"),
-			Map.entry(MBTextEnum.LOAD_PROMPT, "Load drawing from"),
-			Map.entry(MBTextEnum.DRAWING_TITLE, "Enter the title of the drawing"),
-			Map.entry(MBTextEnum.DRAWING_AUTHOR, "Enter the autor of the drawing"), Map.entry(MBTextEnum.COLON, ":"),
-			Map.entry(MBTextEnum.SHAPE, ".shape"));
+	public interface ILabeled {
+		String label();
+	}
+
+	/**
+	 * A Enum class that contains the names of the menu items. This class has
+	 * additional logic for looking up an class constant and returning it as a
+	 * String.
+	 * 
+	 * @author Clive Leddy
+	 * @version 1.0
+	 *
+	 */
+	public static enum MenuBarItemEnum implements ILabeled {
+		FILE("File"), NEW("New..."), SAVE_AS("Save as..."), LOAD("Load"), EXIT("Exit"), EDIT("Edit"), UNDO("Undo"),
+		NAME("Name..."), AUTHOR("Author..."), NEW_DRAWING_NAME_PROMPT("Enter new name of the drawing:"),
+		NEW_DRAWING_AUTHOR_PROMPT("Enter new author of the drawing:"), SAVE_AS_PROMPT("Save drawing to:"),
+		LOAD_PROMPT("Load drawing from:"), SHAPE(".shape"), DRAWING_NAME("Enter the name of the drawing:"),
+		DRAWING_AUTHOR("Enter the autor of the drawing:"), INFO("Info");
+
+		private final String label;
+
+		private MenuBarItemEnum(String label) {
+			this.label = label;
+		}
+
+		/**
+		 * Get the text version from the Enum class.
+		 * 
+		 * @return a label as type String.
+		 */
+		@Override
+		public String label() {
+
+			return label;
+		}
+	}
 
 	// reference to the main JFrame
-	protected JPaintFrame jPaintFrame;
+	private JPaintFrame jPaintFrame;
 
 	// a reference to a drawing d
-	private Drawing d;
+	// private Drawing d;
 
+	// LISTENER LISTS
 	// a list of listeners for the menu bar drawing object.
 	private EventListenerList menuBarDrawingListenerList = new EventListenerList();
 
 	public MyMenuBar(JPaintFrame jPaintFrame) {
-		super();
-		this.jPaintFrame = jPaintFrame;
-		d = null;
-		initialiseMenuBar();
-	}
 
-	/**
-	 * Get a text description.
-	 * 
-	 * @param key to index the container that holds the text description as Enum.
-	 * @return a String.
-	 */
-	private static String getText(MBTextEnum key) {
-		return Text.get(key);
+		super();
+
+		this.jPaintFrame = jPaintFrame;
+
+		initialiseMenuBar();
+
 	}
 
 	/**
 	 * Create the menu bars functions, File and Edit.
 	 */
 	private void initialiseMenuBar() {
+
 		// File menu
-		add(initialiseFileMenu(new JMenu(getText(MBTextEnum.FILE))));
+		add(initialiseFileMenu(new JMenu(MenuBarItemEnum.FILE.label)));
+
 		// Edit menu
-		add(initialiseEditMenu(new JMenu(getText(MBTextEnum.EDIT))));
+		add(initialiseEditMenu(new JMenu(MenuBarItemEnum.EDIT.label)));
 	}
 
 	/**
@@ -114,15 +146,23 @@ public class MyMenuBar extends JMenuBar {
 	 * @param mFile file menu as JMenu.
 	 */
 	private JMenu initialiseFileMenu(JMenu mFile) {
+
 		// new Menu Item
-		mFile.add(new myJMenuItem(getText(MBTextEnum.NEW) + getText(MBTextEnum.DOT)));
+		mFile.add(new myJMenuItem(MenuBarItemEnum.NEW.label));
+
 		// save as Menu Item
-		mFile.add(new myJMenuItem(getText(MBTextEnum.SAVE_AS) + getText(MBTextEnum.DOT)));
+		mFile.add(new myJMenuItem(MenuBarItemEnum.SAVE_AS.label));
+
 		// load Menu Item
-		mFile.add(new myJMenuItem(getText(MBTextEnum.LOAD)));
+		mFile.add(new myJMenuItem(MenuBarItemEnum.LOAD.label));
+
+		// info Menu Item
+		mFile.add(new myJMenuItem(MenuBarItemEnum.INFO.label));
+
 		mFile.addSeparator();
-		// exitMenuItem(mFile);
-		mFile.add(new myJMenuItem(getText(MBTextEnum.EXIT)));
+
+		// exit Menu Item
+		mFile.add(new myJMenuItem(MenuBarItemEnum.EXIT.label));
 
 		return mFile;
 	}
@@ -133,12 +173,15 @@ public class MyMenuBar extends JMenuBar {
 	 * @param mEdit file menu as JMenu.
 	 */
 	private JMenu initialiseEditMenu(JMenu mEdit) {
+
 		// Undo
-		mEdit.add(new myJMenuItem(getText(MBTextEnum.UNDO)));
+		mEdit.add(new myJMenuItem(MenuBarItemEnum.UNDO.label));
+
 		// Drawing title
-		mEdit.add(new myJMenuItem(getText(MBTextEnum.NAME) + getText(MBTextEnum.DOT)));
+		mEdit.add(new myJMenuItem(MenuBarItemEnum.NAME.label));
+
 		// Drawing author
-		mEdit.add(new myJMenuItem(getText(MBTextEnum.AUTHOR) + getText(MBTextEnum.DOT)));
+		mEdit.add(new myJMenuItem(MenuBarItemEnum.AUTHOR.label));
 
 		return mEdit;
 	}
@@ -154,6 +197,29 @@ public class MyMenuBar extends JMenuBar {
 	}
 
 	/**
+	 * Set the drawing object.
+	 * 
+	 * @param d  is a drawing instance of type Drawing.
+	 * @param id menu item id from Map<MBTextEnum, String> Text
+	 */
+	public void setDrawingObject(Drawing d, String id) {
+
+		// create new source event object
+		MyDrawingAreaEvent<Drawing> dae = new MyDrawingAreaEvent<Drawing>(this, d);
+
+		if (id != null) {
+
+			dae.setId(id);
+
+			firedDrawingObjectEvent(dae);
+
+		} else {
+
+			setDrawingObject(d);
+		}
+	}
+
+	/**
 	 * The Drawing has either been created or modified, inform all the listeners.
 	 * 
 	 * @param <T>   a generic type as type Drawing
@@ -162,10 +228,13 @@ public class MyMenuBar extends JMenuBar {
 	 */
 	@SuppressWarnings("unchecked")
 	public void firedDrawingObjectEvent(MyDrawingAreaEvent<Drawing> mle) {
+
 		Object[] listerners = menuBarDrawingListenerList.getListenerList();
 
 		for (int index = 0; index < listerners.length; index += 2) {
+
 			if (listerners[index] == IDrawingAreaListener.class) {
+
 				((IDrawingAreaListener<MyDrawingAreaEvent<Drawing>>) listerners[index + 1])
 						.drawingAreaEventOccurred(mle);
 			}
@@ -178,8 +247,8 @@ public class MyMenuBar extends JMenuBar {
 	 * @param a reference to a listener of type IDrawingAreaListener
 	 */
 	public void addMenuBarDrawingListener(IDrawingAreaListener<MyDrawingAreaEvent<Drawing>> listener) {
-		menuBarDrawingListenerList.add(IDrawingAreaListener.class, listener);
 
+		menuBarDrawingListenerList.add(IDrawingAreaListener.class, listener);
 	}
 
 	/**
@@ -188,8 +257,8 @@ public class MyMenuBar extends JMenuBar {
 	 * @param a reference to a listener of type IDrawingAreaListener.
 	 */
 	public void removeMenuBarDrawingListener(IDrawingAreaListener<MyDrawingAreaEvent<Drawing>> listener) {
-		menuBarDrawingListenerList.remove(IDrawingAreaListener.class, listener);
 
+		menuBarDrawingListenerList.remove(IDrawingAreaListener.class, listener);
 	}
 
 	/**
@@ -202,10 +271,13 @@ public class MyMenuBar extends JMenuBar {
 	 * @version 1.0
 	 */
 	class myJMenuItem extends JMenuItem implements ActionListener {
+
 		private static final long serialVersionUID = -3898605973624196788L;
 
 		public myJMenuItem(String title) {
+
 			super(title);
+
 			addActionListener(this);
 		}
 
@@ -217,156 +289,406 @@ public class MyMenuBar extends JMenuBar {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
+
 			String itemName = e.getActionCommand();
-			// New drawing
-			newDrawing(itemName);
-			// Save drawing as
-			saveDrawingAs(itemName);
-			// Exit
-			if (itemName.equals(MyMenuBar.getText(MBTextEnum.EXIT))) {
-				System.exit(0);
-			}
-			// Load
-			if (itemName.equals(MyMenuBar.getText(MBTextEnum.LOAD))) {
-				JOptionPane.showInputDialog(jPaintFrame, MyMenuBar.getText(MyMenuBar.MBTextEnum.LOAD_PROMPT)
-						+ MyMenuBar.getText(MyMenuBar.MBTextEnum.COLON), null);
-			}
-			// Undo
-			if (itemName.equals(MyMenuBar.getText(MBTextEnum.UNDO))) {
-				// Do nothing
-			}
-			// New drawing title
-			newDrawingName(itemName);
-			// New drawing author
-			newDrawingAuthor(itemName);
 
+			Broker broker = new Broker();
+
+			broker.addCommand(MenuBarItemEnum.NEW.label,
+					new NewNameAuthorInput(MenuBarItemEnum.NEW_DRAWING_NAME_PROMPT.label,
+							MenuBarItemEnum.NEW_DRAWING_AUTHOR_PROMPT.label, jPaintFrame));
+			broker.addCommand(MenuBarItemEnum.AUTHOR.label,
+					new UpdateAuthorInput(MenuBarItemEnum.DRAWING_AUTHOR.label, jPaintFrame));
+
+			broker.addCommand(MenuBarItemEnum.NAME.label,
+					new UpdateNameInput(MenuBarItemEnum.DRAWING_NAME.label, jPaintFrame));
+
+			broker.addCommand(MenuBarItemEnum.SAVE_AS.label,
+					new SaveAs(MenuBarItemEnum.DRAWING_NAME.label, jPaintFrame));
+
+			broker.addCommand(MenuBarItemEnum.EXIT.label, new Exit());
+
+			broker.addCommand(MenuBarItemEnum.UNDO.label, new Undo());
+
+			broker.addCommand(MenuBarItemEnum.LOAD.label, new Load(MenuBarItemEnum.LOAD_PROMPT.label, jPaintFrame));
+
+			broker.addCommand(MenuBarItemEnum.INFO.label, new Info(jPaintFrame));
+
+			broker.runCommand(itemName);
 		}
-
-		/**
-		 * Add a new author to the artwork this is triggered by a menu item. Get a new
-		 * author for a drawing and update the drawing object.
-		 * 
-		 * @param itemName is a key that was extracted from the source event.
-		 */
-		private void newDrawingAuthor(String itemName) {
-			if (itemName.equals(MyMenuBar.getText(MBTextEnum.AUTHOR) + MyMenuBar.getText(MBTextEnum.DOT))) {
-				String author;
-				author = JOptionPane.showInputDialog(jPaintFrame, MyMenuBar.getText(MyMenuBar.MBTextEnum.DRAWING_AUTHOR)
-						+ MyMenuBar.getText(MyMenuBar.MBTextEnum.COLON), null);
-
-				if (author != null) {
-					if (!author.isBlank() && (d != null)) {
-						// update the drawings author
-						d.setAuthor(author);
-						// re-set the drawing object.
-						setDrawingObject(d);
-					}
-				}
-			}
-		}
-
-		/**
-		 * Add a new title to the artwork this is triggered by a menu item. Get a new
-		 * title for a drawing and update the drawing object.
-		 * 
-		 * @param itemName is a key that was extracted from the source event.
-		 */
-		private void newDrawingName(String itemName) {
-			if (itemName.equals(MyMenuBar.getText(MBTextEnum.NAME) + MyMenuBar.getText(MBTextEnum.DOT))) {
-				String title = "";
-				title = JOptionPane.showInputDialog(jPaintFrame, MyMenuBar.getText(MyMenuBar.MBTextEnum.DRAWING_TITLE)
-						+ MyMenuBar.getText(MyMenuBar.MBTextEnum.COLON), null);
-
-				if (title != null) {
-					if (!title.isBlank() && (d != null)) {
-						// update the drawings title
-						d.setName(title);
-						// re-set the drawing object.
-						setDrawingObject(d);
-					}
-				}
-			}
-		}
-
-		/**
-		 * New drawing method that is triggered by a menu item. This method creates 2
-		 * input dialogs. The first input dialog request the artwork title. The second
-		 * input dialog requests the artwork author's name. Then create a new drawing
-		 * with the title and author of the artwork.
-		 * 
-		 * @param itemName is a key that was extracted from the source event.
-		 */
-		private void newDrawing(String itemName) {
-			if (itemName.equals(MyMenuBar.getText(MBTextEnum.NEW) + MyMenuBar.getText(MBTextEnum.DOT))) {
-				String title = null;
-				String name = null;
-
-				title = JOptionPane.showInputDialog(jPaintFrame,
-						MyMenuBar.getText(MyMenuBar.MBTextEnum.NEW_DRAWING_TITLE_PROMPT)
-								+ MyMenuBar.getText(MyMenuBar.MBTextEnum.COLON),
-						null);
-
-				name = JOptionPane.showInputDialog(jPaintFrame,
-						MyMenuBar.getText(MyMenuBar.MBTextEnum.NEW_AUTHOR_NAME_PROMPT)
-								+ MyMenuBar.getText(MyMenuBar.MBTextEnum.COLON),
-						null);
-				setNewDrawingTitleAuthor(title, name);
-			}
-		}
-
-		/**
-		 * Save as method that is triggered by a menu item. This method creates a input
-		 * dialog and displays default file as a suggestion for a file name.
-		 * 
-		 * @param itemName is a key that was extracted from the source event.
-		 */
-		private void saveDrawingAs(String itemName) {
-			if (itemName.equals(MyMenuBar.getText(MBTextEnum.SAVE_AS) + MyMenuBar.getText(MBTextEnum.DOT))) {
-
-				/**
-				 * Function interface implementation.
-				 */
-				IMyFunctionalInterface<String, Drawing> mf = (draw) -> {
-					String str = "";
-					if (draw != null) {
-						if (!draw.getName().isBlank() && !draw.getAuthor().isBlank()) {
-							str += draw.getName() + " by " + draw.getAuthor();
-						}
-						if (!draw.getName().isBlank() && draw.getAuthor().isBlank()) {
-							str += draw.getName();
-						}
-						if (draw.getName().isBlank() && !draw.getAuthor().isBlank()) {
-							str += draw.getAuthor();
-						}
-					}
-
-					return str += MyMenuBar.getText(MyMenuBar.MBTextEnum.SHAPE);
-				};
-
-				JOptionPane.showInputDialog(jPaintFrame, MyMenuBar.getText(MyMenuBar.MBTextEnum.SAVE_AS_PROMPT)
-						+ MyMenuBar.getText(MyMenuBar.MBTextEnum.COLON), mf.execute(d));
-			}
-		}
-
-		/**
-		 * Given a title or author create a new drawing. Add either the non null title
-		 * or author or both to a drawing object.
-		 * 
-		 * @param title  the name of the art work as a String.
-		 * @param author the name of the author of the art work as a String.
-		 */
-		private void setNewDrawingTitleAuthor(String title, String author) {
-
-			if (!title.isBlank() || !author.isBlank()) {
-				d = new Drawing(title, author);
-
-			} else {
-				d = null;
-			}
-
-			setDrawingObject(d);
-		}
-
 	}
 
+	/**
+	 * Command design pattern Request class.
+	 * 
+	 * @author Clive Leddy
+	 * @version 1.0
+	 *
+	 */
+	public class InputTextDialog {
+
+		private Drawing d;
+
+		private String inputText;
+
+		private String outText;
+
+		private JPaintFrame jPaintFrame;
+
+		InputTextDialog(String outText, JPaintFrame jPaintFrame) {
+
+			d = new Drawing();
+
+			this.outText = outText;
+
+			this.jPaintFrame = jPaintFrame;
+		}
+
+		private String getInputDialog() {
+
+			return JOptionPane.showInputDialog(jPaintFrame, outText, null);
+		}
+
+		private String getInputDialog(Object initialSelectionValue) {
+
+			return JOptionPane.showInputDialog(jPaintFrame, outText, initialSelectionValue);
+		}
+
+		public boolean isInputText() {
+
+			if (inputText != null) {
+
+				if (!inputText.isBlank() && (d != null)) {
+
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public void updateName() {
+
+			inputText = getInputDialog();
+
+			if (isInputText()) {
+
+				d.setName(inputText);
+			}
+		}
+
+		public void updateAuthor() {
+
+			inputText = getInputDialog();
+			if (isInputText()) {
+
+				d.setAuthor(inputText);
+			}
+		}
+
+		public Drawing getDrawing() {
+
+			return d;
+		}
+
+		public void newName() {
+
+			inputText = getInputDialog();
+
+			if (inputText == null) {
+
+				inputText = "";
+			}
+
+			d.setName(inputText);
+		}
+
+		public void newAuthor() {
+
+			inputText = getInputDialog();
+
+			if (inputText == null) {
+
+				inputText = "";
+			}
+
+			d.setAuthor(inputText);
+		}
+
+		public void saveAs(Object initialSelectionValue) {
+			inputText = getInputDialog(initialSelectionValue);
+		}
+
+		public void Load() {
+
+			inputText = getInputDialog();
+
+			/*
+			 * Temporary code for testing
+			 * 
+			 */
+			Drawing d1 = new Drawing();
+
+			System.out.println(d1);
+
+			// Set name and author.
+			System.out.println("\nSetting name and author...");
+
+			d1.setName("Mona Lisa");
+			d1.setAuthor("L. da Vincis");
+
+			System.out.println(d1);
+
+			// Add five shapes with no end points
+			System.out.println("\nAdding 5 shapes with no end points...");
+
+			Shape face = new Circle(30, 35, "#ffe0bd"); // RGB(255,224,189)
+			Shape leftEye = new Circle(72, 75, "#0000ff"); // RGB(0, 0, 255)
+			Shape rightEye = new Circle(122, 75, "#0000ff"); // RGB(0, 0, 255)
+			Shape nose = new Rectangle(96, 100, "#000000"); // RGB(0, 0, 0)
+			Shape mouth = new Rectangle(60, 130, "#ff0000"); // RGB(255, 0, 0)
+
+			d1.addShape(face);
+			d1.addShape(leftEye);
+			d1.addShape(rightEye);
+			d1.addShape(nose);
+			d1.addShape(mouth);
+
+			// Add end point to all shapes
+			System.out.println("\nAdding end point to all shapes...");
+			face.addPoint(175, 180);
+			leftEye.addPoint(82, 85);
+			rightEye.addPoint(132, 85);
+			nose.addPoint(110, 120);
+			mouth.addPoint(144, 140);
+			System.out.println("Total circumference is: " + d1.getTotalCircumference());
+			System.out.println("Total area is: " + d1.getTotalArea());
+
+			System.out.println(d1);
+
+			setDrawingObject(d1, MenuBarItemEnum.LOAD.label);
+		}
+	}
+
+	/**
+	 * Command design pattern UpdateNameInput.
+	 * 
+	 * @author Clive Leddy
+	 * @version 1.0
+	 *
+	 */
+	public class UpdateNameInput implements ICommand {
+
+		private InputTextDialog inputTextDialog;
+
+		public UpdateNameInput(String outText, JPaintFrame jPaintFrame) {
+
+			inputTextDialog = new InputTextDialog(outText, jPaintFrame);
+		}
+
+		@Override
+		public void execute() {
+
+			inputTextDialog.updateName();
+
+			// re-set the drawing object.
+			setDrawingObject(inputTextDialog.getDrawing(), MenuBarItemEnum.NAME.label);
+		}
+	}
+
+	public class UpdateAuthorInput implements ICommand {
+
+		private InputTextDialog inputTextDialog;
+
+		public UpdateAuthorInput(String outText, JPaintFrame jPaintFrame) {
+
+			inputTextDialog = new InputTextDialog(outText, jPaintFrame);
+		}
+
+		@Override
+		public void execute() {
+
+			inputTextDialog.updateAuthor();
+
+			// re-set the drawing object.
+			setDrawingObject(inputTextDialog.getDrawing(), MenuBarItemEnum.AUTHOR.label);
+		}
+	}
+
+	public class NewNameAuthorInput implements ICommand {
+
+		private InputTextDialog inputTextDialogName;
+
+		private InputTextDialog inputTextDialogAuthor;
+
+		public NewNameAuthorInput(String outTextName, String outTextAuthor, JPaintFrame jPaintFrame) {
+
+			inputTextDialogName = new InputTextDialog(outTextName, jPaintFrame);
+
+			inputTextDialogAuthor = new InputTextDialog(outTextAuthor, jPaintFrame);
+		}
+
+		@Override
+		public void execute() {
+
+			inputTextDialogName.newName();
+
+			inputTextDialogAuthor.newAuthor();
+
+			inputTextDialogName.getDrawing().setAuthor(inputTextDialogAuthor.getDrawing().getAuthor());
+
+			// re-set the drawing object.
+			setDrawingObject(inputTextDialogName.getDrawing(), MenuBarItemEnum.NEW.label);
+		}
+	}
+
+	public class SaveAs implements ICommand {
+
+		private InputTextDialog inputTextDialogSaveAs;
+
+		public SaveAs(String outTextSaveAs, JPaintFrame jPaintFrame) {
+
+			inputTextDialogSaveAs = new InputTextDialog(outTextSaveAs, jPaintFrame);
+		}
+
+		@Override
+		public void execute() {
+
+			/**
+			 * Function interface implementation.
+			 */
+			IMyFunctionalInterface<String, Drawing> mf = (draw) -> {
+
+				String str = "";
+
+				if (draw != null) {
+
+					if (!draw.getName().isBlank() && !draw.getAuthor().isBlank()) {
+
+						str += draw.getName() + " by " + draw.getAuthor();
+					}
+
+					if (!draw.getName().isBlank() && draw.getAuthor().isBlank()) {
+
+						str += draw.getName();
+					}
+
+					if (draw.getName().isBlank() && !draw.getAuthor().isBlank()) {
+
+						str += draw.getAuthor();
+					}
+				}
+
+				return str += MenuBarItemEnum.SHAPE.label;
+			};
+
+			inputTextDialogSaveAs.saveAs(mf.execute(jPaintFrame.getDrawingPanel().getDrawing()));
+		}
+	}
+
+	public class Exit implements ICommand {
+
+		public Exit() {
+		}
+
+		@Override
+		public void execute() {
+
+			System.exit(0);
+		}
+	}
+
+	public class Undo implements ICommand {
+
+		public Undo() {
+		}
+
+		@Override
+		public void execute() {
+
+			setDrawingObject(new Drawing(), MenuBarItemEnum.UNDO.label);
+		}
+	}
+
+	public class Load implements ICommand {
+
+		private InputTextDialog inputTextDialog;
+
+		public Load(String outText, JPaintFrame jPaintFrame) {
+
+			inputTextDialog = new InputTextDialog(outText, jPaintFrame);
+		}
+
+		@Override
+		public void execute() {
+
+			inputTextDialog.Load();
+		}
+	}
+
+	public class Info implements ICommand {
+
+		// default title and icon
+		private JPaintFrame jPaintFrame;
+
+		public Info(JPaintFrame jPaintFrame) {
+
+			this.jPaintFrame = jPaintFrame;
+		}
+
+		/**
+		 * Create an info message from a drawing.
+		 * 
+		 * @param d a drawing of type Drawing.
+		 * @return a message as a String.
+		 */
+		private String generateMessage(Drawing d) {
+
+			String str = "";
+
+			if (!d.isEmpty()) {
+
+				str = String.format(d.getName() + " by " + d.getAuthor());
+			}
+			if (d.getSize() > 0) {
+
+				str += String.format("\nNumber of shapes: %d", d.getSize());
+
+				str += String.format("\nTotal area: %.1f", d.getTotalArea());
+
+				str += String.format("\nTotal circumference: %f", d.getTotalCircumference());
+			}
+
+			return str;
+		}
+
+		@Override
+		public void execute() {
+
+			Drawing d = jPaintFrame.getDrawingPanel().getDrawing();
+
+			if ((d != null) && !d.isEmpty()) {
+
+				JOptionPane.showMessageDialog(jPaintFrame, generateMessage(d));
+			}
+		}
+	}
+
+	public class Broker {
+
+		private Map<String, ICommand> menuCommands = new HashMap<String, ICommand>();
+
+		public void addCommand(String item, ICommand menCommand) {
+
+			menuCommands.put(item, menCommand);
+		}
+
+		public void runCommand(String item) {
+
+			if (menuCommands.containsKey(item)) {
+
+				menuCommands.get(item).execute();
+			}
+		}
+	}
 }

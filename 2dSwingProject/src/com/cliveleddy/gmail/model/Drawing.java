@@ -2,7 +2,8 @@ package com.cliveleddy.gmail.model;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * <h1>Class Drawing</h1> This class will manage a collection of Shape objects.
@@ -17,18 +18,25 @@ import java.util.Collection;
  * @author Clive Leddy
  * @version 1.2
  */
-public class Drawing implements IDrawable {
+public class Drawing implements IDrawable, Iterator<Shape> {
 
 	private String name;
+
 	private String author;
-	private Collection<Shape> shapes;// collection of shapes, programming to the base type.
+
+	private List<Shape> shapes;// collection of shapes, programming to the base type.
+
+	private int index = 0;
 
 	/**
 	 * Drawing constructor that initialises the class variables.
 	 */
 	public Drawing() {
+
 		this.name = "";
+
 		this.author = "";
+
 		shapes = new ArrayList<Shape>();
 	}
 
@@ -39,8 +47,11 @@ public class Drawing implements IDrawable {
 	 * @param author the authors name that created the shape as a string.
 	 */
 	public Drawing(String name, String author) {
+
 		this.name = name;
+
 		this.author = author;
+
 		shapes = new ArrayList<Shape>();
 	}
 
@@ -52,18 +63,21 @@ public class Drawing implements IDrawable {
 	 */
 	@Override
 	public void draw() {
-		System.out.println(this.toString());
 
-		System.out.println("A drawing  by " + this.author + " called " + this.name);
 		// render each of the shape object in the collection of shapes.
 		for (Shape s : shapes) {
+
 			s.draw();// render the shape.
 		}
 	}
 
 	@Override
 	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
+
+		for (Shape shape : shapes) {
+
+			shape.draw(g);
+		}
 
 	}
 
@@ -73,8 +87,8 @@ public class Drawing implements IDrawable {
 	 * @param name artwork's title as string.
 	 */
 	public void setName(String name) {
-		this.name = name;
 
+		this.name = name;
 	}
 
 	/**
@@ -83,6 +97,7 @@ public class Drawing implements IDrawable {
 	 * @return the title as a String.
 	 */
 	public String getName() {
+
 		return name;
 	}
 
@@ -92,6 +107,7 @@ public class Drawing implements IDrawable {
 	 * @param author name as a string.
 	 */
 	public void setAuthor(String author) {
+
 		this.author = author;
 
 	}
@@ -102,6 +118,7 @@ public class Drawing implements IDrawable {
 	 * @return the authors name as a String.
 	 */
 	public String getAuthor() {
+
 		return author;
 	}
 
@@ -111,7 +128,9 @@ public class Drawing implements IDrawable {
 	 * @param s a non null object as data type shape.
 	 */
 	public void addShape(Shape s) {
+
 		if (s != null) {
+
 			shapes.add(s);
 		}
 	}
@@ -134,15 +153,21 @@ public class Drawing implements IDrawable {
 	 * @return the total circumference of all shapes as a double.
 	 */
 	public double getTotalCircumference() {
+
 		double c = 0;
 
 		for (Shape s : shapes) {
+
 			try {
+
 				c += s.getCircumference();
+
 			} catch (ShapeException e) {
 
+				// TODO print error info
 			}
 		}
+
 		return c;
 	}
 
@@ -154,16 +179,82 @@ public class Drawing implements IDrawable {
 	 * @return the total area of all shapes as a double.
 	 */
 	public double getTotalArea() {
+
 		double a = 0;
 
 		for (Shape s : shapes) {
+
 			try {
+
 				a += s.getArea();
+
 			} catch (ShapeException e) {
+
+				// TODO print error info
 
 			}
 		}
+
 		return a;
+	}
+
+	@Override
+	public boolean hasNext() {
+
+		if (index < shapes.size()) {
+
+			return true;
+		}
+
+		index = 0;
+
+		return false;
+	}
+
+	@Override
+	public Shape next() {
+
+		if (hasNext()) {
+
+			index++;
+
+			return shapes.get(index - 1);
+		}
+
+		index = 0;
+
+		return null;
+	}
+
+	/**
+	 * Remove the last shape added to the list of shapes.
+	 */
+	public void removeLastShape() {
+
+		if (shapes.size() > 0) {
+
+			shapes.remove(shapes.size() - 1);
+		}
+	}
+
+	/**
+	 * Is the drawing object empty? Contains no name, author and no list of shapes.
+	 * 
+	 * @return true if empty otherwise false.
+	 */
+	public boolean isEmpty() {
+
+		if (shapes.size() > 0) {
+
+			return false;
+		}
+
+		if (!name.isBlank() || !author.isBlank()) {
+
+			return false;
+		}
+
+		return true;
 	}
 
 	public String toString() {
@@ -173,10 +264,13 @@ public class Drawing implements IDrawable {
 
 		// name and author
 		res += String.format("name=%s%s author=%s%s", this.name, del, this.author, del);
+
 		// get size
 		res += String.format("size=%d%s", this.getSize(), del);
+
 		// get circumference
 		res += String.format("circumference=%.1f%s", this.getTotalCircumference(), del);
+
 		// get area
 		res += String.format("area=%.1f", this.getTotalArea());
 
@@ -184,5 +278,4 @@ public class Drawing implements IDrawable {
 
 		return res;
 	}
-
 }
