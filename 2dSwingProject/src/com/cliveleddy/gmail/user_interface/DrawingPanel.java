@@ -55,6 +55,9 @@ class DrawingPanel extends JPanel {
 	 * This is an collection of Objects.
 	 */
 	private List<Object> allShapes = new ArrayList<>();
+	/**
+	 * Reverse iterator for the ArrayList allShapes.
+	 */
 	private ListIterator<Object> allShapesIterator = allShapes.listIterator();
 
 	public DrawingPanel() {
@@ -115,6 +118,11 @@ class DrawingPanel extends JPanel {
 		repaint();
 	}
 
+	/**
+	 * Add a drawing to the class drawing instance.
+	 * 
+	 * @param d a drawing of type Drawing.
+	 */
 	public void addDrawing(Drawing d) {
 
 		if (d != null) {
