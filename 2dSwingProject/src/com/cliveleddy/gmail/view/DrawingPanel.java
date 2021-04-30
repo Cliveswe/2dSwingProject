@@ -1,4 +1,4 @@
-package com.cliveleddy.gmail.user_interface;
+package com.cliveleddy.gmail.view;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -111,7 +111,6 @@ class DrawingPanel extends JPanel {
 		if (d != null) {
 
 			drawing = d;
-
 		}
 
 		// trigger the graphics painting
@@ -257,10 +256,11 @@ class DrawingPanel extends JPanel {
 					if (drawing != null) {
 
 						drawing.addShape(shape.clone());
-
+						shape.clear();// Shape has been added to the drawing and is now reset.
 					} else {
 
 						allShapes.add(shape.clone());
+
 					}
 				}
 			}

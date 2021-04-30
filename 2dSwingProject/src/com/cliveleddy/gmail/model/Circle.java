@@ -49,7 +49,7 @@ public class Circle extends Shape {
 	/**
 	 * Clone this Object.
 	 */
-	public Circle clone() {
+	public Shape clone() {
 		return new Circle(this);
 
 	}
@@ -236,5 +236,4 @@ public class Circle extends Shape {
 
 		return res;
 	}
-
 }

@@ -1,4 +1,4 @@
-package com.cliveleddy.gmail.user_interface;
+package com.cliveleddy.gmail.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -690,5 +690,7 @@ public class MyMenuBar extends JMenuBar {
 				menuCommands.get(item).execute();
 			}
 		}
+
 	}
+
 }

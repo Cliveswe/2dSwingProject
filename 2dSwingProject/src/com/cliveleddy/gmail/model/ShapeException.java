@@ -22,7 +22,7 @@ public class ShapeException extends Exception {
 	 */
 	private static final long serialVersionUID = 3879073651253019757L;
 
-	ShapeException() {
+	public ShapeException() {
 
 		super();
 	}
@@ -31,7 +31,7 @@ public class ShapeException extends Exception {
 	 * 
 	 * @param message text message describing the error as String.
 	 */
-	ShapeException(String message) {
+	public ShapeException(String message) {
 
 		super(message);
 
@@ -43,7 +43,7 @@ public class ShapeException extends Exception {
 	 * 
 	 * @param cause origin description of the cause of the error as Throwable.
 	 */
-	ShapeException(Throwable cause) {
+	public ShapeException(Throwable cause) {
 
 		super(cause);
 
@@ -59,7 +59,7 @@ public class ShapeException extends Exception {
 	 * @param message text message describing the error as String.
 	 * @param cause   origin description of the cause of the error as Throwable.
 	 */
-	ShapeException(String message, Throwable cause) {
+	public ShapeException(String message, Throwable cause) {
 
 		super(message, cause);
 

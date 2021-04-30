@@ -24,7 +24,7 @@ import java.util.Iterator;
  * @author Clive Leddy
  * @version 2.2
  */
-public abstract class Shape implements IDrawable {
+public abstract class Shape implements IDrawable, Cloneable {
 
 	protected String END_POINT_ERROR_MESSAGE = "end point is missing!";
 
@@ -188,4 +188,10 @@ public abstract class Shape implements IDrawable {
 
 		return true;
 	}
+
+	public void clear() {
+		points.add(0, null);
+		points.add(1, null);
+	}
+
 }

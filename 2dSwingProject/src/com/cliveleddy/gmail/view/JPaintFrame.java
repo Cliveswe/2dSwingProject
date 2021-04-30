@@ -1,9 +1,10 @@
-package com.cliveleddy.gmail.user_interface;
+package com.cliveleddy.gmail.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -102,10 +103,15 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 	public void SetFrameIcon() {
 
 		BufferedImage img = null;
+		InputStream stream = null;
 
 		try {
 
-			img = ImageIO.read(getClass().getResource("../resource/favicon-32x32.png"));
+			stream = getClass().getResourceAsStream("../resource/favicon-32x32.png");
+
+			img = ImageIO.read(stream);
+
+			// img = ImageIO.read(getClass().getResource("../resource/favicon-32x32.png"));
 
 		} catch (IOException e) {
 
@@ -113,6 +119,19 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 		}
 
 		setIconImage(img);
+
+		img.flush();
+
+		try {
+
+			stream.close();
+
+		} catch (IOException e) {
+
+			System.err.println("Could not close \"stream\"!");
+
+			e.printStackTrace();
+		}
 	}
 
 	private void SetLayout() {

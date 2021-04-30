@@ -1,4 +1,4 @@
-package com.cliveleddy.gmail.user_interface;
+package com.cliveleddy.gmail.view;
 
 import java.util.EventObject;
 

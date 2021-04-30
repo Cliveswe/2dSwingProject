@@ -2,7 +2,7 @@ package com.cliveleddy.gmail;
 
 import javax.swing.SwingUtilities;
 
-import com.cliveleddy.gmail.user_interface.JPaintFrame;
+import com.cliveleddy.gmail.view.JPaintFrame;
 
 /**
  * <h1>Step 1</h1> This application creates different shapes and calls various
