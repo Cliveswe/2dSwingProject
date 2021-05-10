@@ -29,7 +29,7 @@ import com.cliveleddy.gmail.model.Drawing;
  * artwork's new or updated title and author. The title and author are used to
  * update the JFrame's title.
  * <p>
- * <h1>Step 6</h1> The class MyDrawingArea has been removed from the
+ * <h2>Step 6</h2> The class MyDrawingArea has been removed from the
  * application. It was broken down into 2 new classes, DrawingPanel and
  * MyToolRow. The motivation for this change is that the menu tool bars logic
  * will be developed. The wiring for event handling has been modified.
