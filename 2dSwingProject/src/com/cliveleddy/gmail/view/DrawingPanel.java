@@ -36,7 +36,7 @@ import com.cliveleddy.gmail.model.Shape;
  * @version 2.1
  *
  */
-class DrawingPanel extends JPanel {
+public class DrawingPanel extends JPanel {
 	private static final long serialVersionUID = 1223323159512490642L;
 
 	private Drawing drawing;
@@ -60,6 +60,9 @@ class DrawingPanel extends JPanel {
 	 */
 	private ListIterator<Object> allShapesIterator = allShapes.listIterator();
 
+	/**
+	 * Class constructor.
+	 */
 	public DrawingPanel() {
 
 		super();
@@ -69,6 +72,11 @@ class DrawingPanel extends JPanel {
 		initialise();
 	}
 
+	/**
+	 * Class constructor.
+	 * 
+	 * @param d a drawing of type Drawing.
+	 */
 	public DrawingPanel(Drawing d) {
 
 		super();
@@ -99,6 +107,22 @@ class DrawingPanel extends JPanel {
 		setBackground(Color.WHITE);
 
 		setMinimumSize(new Dimension(200, 200));
+	}
+
+	/**
+	 * Reset the drawing panel. A new blank drawing is created as well as a new
+	 * empty list of shapes.
+	 */
+	public void resetDrawingPanel() {
+
+		if (shape != null) {
+			shape.clear();
+		}
+
+		drawing = new Drawing();
+		allShapes = new ArrayList<>();
+
+		repaint();
 	}
 
 	/**
@@ -148,6 +172,9 @@ class DrawingPanel extends JPanel {
 		return drawing;
 	}
 
+	/**
+	 * Draw the shape components of a drawing.
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 
@@ -271,9 +298,7 @@ class DrawingPanel extends JPanel {
 	/**
 	 * The mouse has moved inform all the listeners.
 	 * 
-	 * @param <T>   generic type parameter of type Point.
-	 * 
-	 * @param event mle object as MyDrawingAreaEvent
+	 * @param mle is an event object, type MyDrawingAreaEvent.
 	 */
 	@SuppressWarnings("unchecked")
 	private void firedMouseLocationEvent(MyDrawingAreaEvent<Point> mle) {
@@ -385,4 +410,5 @@ class DrawingPanel extends JPanel {
 
 		return toolbarSelectedShape;
 	}
+
 }

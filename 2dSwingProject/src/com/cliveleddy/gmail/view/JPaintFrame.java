@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.cliveleddy.gmail.controller.MenuBarItemEnum;
 import com.cliveleddy.gmail.model.Drawing;
 
 /**
@@ -223,7 +224,7 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 
 	}
 
-	protected DrawingPanel getDrawingPanel() {
+	public DrawingPanel getDrawingPanel() {
 
 		return dp;
 	}
@@ -243,7 +244,7 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 			if (drawingAreaEvent.getData() != null) {
 
 				// New Menu
-				if (MyMenuBar.MenuBarItemEnum.NEW.label() == drawingAreaEvent.getId()) {
+				if (MenuBarItemEnum.NEW.label() == drawingAreaEvent.getId()) {
 					// updateFrameTitle(drawingAreaEvent.getData().getName(),
 					// drawingAreaEvent.getData().getAuthor());
 					dp.setDrawing(drawingAreaEvent.getData());
@@ -251,23 +252,24 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 					updateFrameTitle(dp.getDrawing().getName(), dp.getDrawing().getAuthor());
 				}
 				// Load Menu
-				if (MyMenuBar.MenuBarItemEnum.LOAD.label() == drawingAreaEvent.getId()) {
+				if (MenuBarItemEnum.LOAD.label() == drawingAreaEvent.getId()) {
 					// updateFrameTitle(drawingAreaEvent.getData().getName(),
 					// drawingAreaEvent.getData().getAuthor());
 
-					if (!dp.getDrawing().isEmpty()) {
-
-						dp.addDrawing(drawingAreaEvent.getData());
-						// dp.printComponents(dp.getGraphics());
-					} else {
-
-						dp.setDrawing(drawingAreaEvent.getData());
-					}
+					/*
+					 * if (!dp.getDrawing().isEmpty()) { dp.resetDrawingPanel();
+					 * dp.addDrawing(drawingAreaEvent.getData()); //
+					 * dp.printComponents(dp.getGraphics()); } else {
+					 * 
+					 * dp.setDrawing(drawingAreaEvent.getData()); }
+					 */
+					dp.resetDrawingPanel();
+					dp.setDrawing(drawingAreaEvent.getData());
 
 					updateFrameTitle(dp.getDrawing().getName(), dp.getDrawing().getAuthor());
 				}
 				// Edit Name
-				if (MyMenuBar.MenuBarItemEnum.NAME.label() == drawingAreaEvent.getId()) {
+				if (MenuBarItemEnum.NAME.label() == drawingAreaEvent.getId()) {
 					// updateFrameTitle(drawingAreaEvent.getData().getName(),
 					// drawingAreaEvent.getData().getAuthor());
 					dp.getDrawing().setName(drawingAreaEvent.getData().getName());
@@ -275,7 +277,7 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 					updateFrameTitle(dp.getDrawing().getName(), dp.getDrawing().getAuthor());
 				}
 				// Edit Author
-				if (MyMenuBar.MenuBarItemEnum.AUTHOR.label() == drawingAreaEvent.getId()) {
+				if (MenuBarItemEnum.AUTHOR.label() == drawingAreaEvent.getId()) {
 					// updateFrameTitle(drawingAreaEvent.getData().getName(),
 					// drawingAreaEvent.getData().getAuthor());
 					dp.getDrawing().setAuthor(drawingAreaEvent.getData().getAuthor());
@@ -283,7 +285,7 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 					updateFrameTitle(dp.getDrawing().getName(), dp.getDrawing().getAuthor());
 				}
 				// Edit Undo
-				if (MyMenuBar.MenuBarItemEnum.UNDO.label() == drawingAreaEvent.getId()) {
+				if (MenuBarItemEnum.UNDO.label() == drawingAreaEvent.getId()) {
 
 					dp.getDrawing().removeLastShape();
 
