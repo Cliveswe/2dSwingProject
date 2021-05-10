@@ -11,9 +11,9 @@ Step ...:
 
 Step ...: 
 
-Step4: 
+...Step4: 
 
-Step5: 
+...Step5: 
 
 Step6: 
 
