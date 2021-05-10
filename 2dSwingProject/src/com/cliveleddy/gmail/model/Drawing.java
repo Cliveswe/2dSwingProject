@@ -71,6 +71,10 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 		}
 	}
 
+	/**
+	 * Render all the shape objects in the array list shapes.
+	 * 
+	 */
 	@Override
 	public void draw(Graphics g) {
 
@@ -92,7 +96,7 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 	}
 
 	/**
-	 * get the title name of the artwork.
+	 * Get the title name of the artwork.
 	 * 
 	 * @return the title as a String.
 	 */
@@ -138,7 +142,7 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 	/**
 	 * Get the number of shape objects in the collection of shapes.
 	 * 
-	 * @return number of objects as an int.
+	 * @return number of objects as an integer.
 	 */
 	public int getSize() {
 
@@ -164,7 +168,7 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 
 			} catch (ShapeException e) {
 
-				// TODO print error info
+				System.err.println("Error in calculating the shape circumference: " + e.getMessage());
 			}
 		}
 
@@ -190,7 +194,7 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 
 			} catch (ShapeException e) {
 
-				// TODO print error info
+				System.err.println("Error in calculating the shape area: " + e.getMessage());
 
 			}
 		}
@@ -198,6 +202,9 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 		return a;
 	}
 
+	/**
+	 * Is there an additional shape object in the list of shapes.
+	 */
 	@Override
 	public boolean hasNext() {
 
@@ -211,6 +218,9 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 		return false;
 	}
 
+	/**
+	 * Get the next shape object in the list of shapes.
+	 */
 	@Override
 	public Shape next() {
 
@@ -257,6 +267,9 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 		return true;
 	}
 
+	/**
+	 * Create a message for the drawing object.
+	 */
 	public String toString() {
 		String res = "Drawing[";
 

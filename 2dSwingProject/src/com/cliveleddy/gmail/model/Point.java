@@ -45,7 +45,18 @@ public class Point {
 	}
 
 	/**
-	 * Get the value for point y.
+	 * Get the value of x coordinate in a Point.
+	 * 
+	 * @return value of x as type String.
+	 */
+	public String getX() {
+		return Double.toString(x);
+	}
+
+	/**
+	 * Get the value of y coordinate in a Point.
+	 * 
+	 * @return value of y as type Double.
 	 */
 	public double get_y() {
 
@@ -53,7 +64,18 @@ public class Point {
 	}
 
 	/**
-	 * Set the value for point x.
+	 * Get the value of y coordinate in a Point.
+	 * 
+	 * @return value of y as type String.
+	 */
+	public String getY() {
+		return Double.toString(y);
+	}
+
+	/**
+	 * Set the value of the x coordinate in a Point.
+	 * 
+	 * @param x coordinate of a point, type double.
 	 */
 	public void set_x(double x) {
 
@@ -61,7 +83,9 @@ public class Point {
 	}
 
 	/**
-	 * Set the value for point y.
+	 * Set the value of the y coordinate in a Point.
+	 * 
+	 * @param y coordinate of a point, type double.
 	 */
 	public void set_y(double y) {
 
@@ -69,7 +93,7 @@ public class Point {
 	}
 
 	/**
-	 * Display the current coordinates.
+	 * Get the current coordinates.
 	 */
 	public String toString() {
 

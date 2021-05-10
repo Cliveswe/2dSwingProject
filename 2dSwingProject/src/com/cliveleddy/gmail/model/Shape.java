@@ -92,6 +92,9 @@ public abstract class Shape implements IDrawable, Cloneable {
 		}
 	}
 
+	/**
+	 * Clone a shape.
+	 */
 	public abstract Shape clone();
 
 	/**
@@ -152,6 +155,15 @@ public abstract class Shape implements IDrawable, Cloneable {
 	}
 
 	/**
+	 * Get the second point.
+	 * 
+	 * @return the second point at type Point.
+	 */
+	public Point getPoint() {
+		return points.get(1);
+	}
+
+	/**
 	 * Add a starting point.
 	 * 
 	 * @param p object point.
@@ -168,6 +180,15 @@ public abstract class Shape implements IDrawable, Cloneable {
 	 */
 	public void setStartPoint(double x, double y) {
 		points.set(0, new Point(x, y));
+	}
+
+	/**
+	 * Get the start point.
+	 * 
+	 * @return the start point at type Point.
+	 */
+	public Point getStartPoint() {
+		return points.get(0);
 	}
 
 	/**
@@ -189,6 +210,10 @@ public abstract class Shape implements IDrawable, Cloneable {
 		return true;
 	}
 
+	/**
+	 * Clear the points of the shape. This method acts as a class points reset to
+	 * Origo.
+	 */
 	public void clear() {
 		points.add(0, null);
 		points.add(1, null);
