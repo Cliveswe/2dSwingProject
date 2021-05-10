@@ -5,11 +5,11 @@ Create a simple file management system to manipulate text files.
 Create sustainable components custom exception management and interfaces.
 The steps used here are by no means an optimal solution. However, it is a solution that maybe of use.
 
-Step1:
+Step ...:
 
-Step2: 
+Step ...: 
 
-Step3: 
+Step ...: 
 
 Step4: 
 
