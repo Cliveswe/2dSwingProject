@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.EventListenerList;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.cliveleddy.gmail.controller.Broker;
+import com.cliveleddy.gmail.controller.CommandBroker;
 import com.cliveleddy.gmail.controller.FileHandler;
 import com.cliveleddy.gmail.controller.FileNameCreator;
 import com.cliveleddy.gmail.controller.ICommand;
@@ -263,7 +263,7 @@ public class MyMenuBar extends JMenuBar {
 		public void actionPerformed(ActionEvent e) {
 			String itemName = e.getActionCommand();
 
-			Broker broker = new Broker();
+			CommandBroker broker = new CommandBroker();
 
 			broker.addCommand(MenuBarItemEnum.NEW.label(),
 					new NewNameAuthorInput(MenuBarItemEnum.NEW_DRAWING_NAME_PROMPT.label(),
