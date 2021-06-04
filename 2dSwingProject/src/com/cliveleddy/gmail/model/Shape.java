@@ -46,36 +46,62 @@ public abstract class Shape implements IDrawable, Cloneable {
 	/**
 	 * Functional interface with lambda expressions.
 	 */
+
+	/**
+	 * Get the value of point x. {@code Function<Point, Double> pointX}
+	 */
 	protected Function<Point, Double> pointX = p -> {
 		return p.get_x();
 	};
 
+	/**
+	 * Get the value of point y. {@code Function<Point, Double> pointY}
+	 */
 	protected Function<Point, Double> pointY = p -> {
 		return p.get_y();
 	};
 
+	/**
+	 * Get the x coordinate of the starting point. {@code Supplier<Double> startX}
+	 */
 	protected Supplier<Double> startX = () -> {
 
 		return pointX.apply(points.get(0));
 	};
 
+	/**
+	 * Get the y coordinate of the starting point. {@code Supplier<Double> startY}
+	 */
 	protected Supplier<Double> startY = () -> {
 
 		return pointY.apply(points.get(0));
 	};
 
+	/**
+	 * Get the x coordinate of the second point. {@code Supplier<Double> secondX}
+	 */
 	protected Supplier<Double> secondX = () -> {
 		return pointX.apply(points.get(1));
 	};
 
+	/**
+	 * Get the y coordinate of the second point. {@code Supplier<Double> secondY}
+	 */
 	protected Supplier<Double> secondY = () -> {
 		return pointY.apply(points.get(1));
 	};
 
+	/**
+	 * Get the Point object of the starting point.
+	 * {@code Supplier<Point> startPoint}
+	 */
 	protected Supplier<Point> startPoint = () -> {
 		return points.get(0);
 	};
 
+	/**
+	 * Get the Point object of the second point. {@code Supplier<Point> secondPoint}
+	 */
 	protected Supplier<Point> secondPoint = () -> {
 		return points.get(1);
 	};
