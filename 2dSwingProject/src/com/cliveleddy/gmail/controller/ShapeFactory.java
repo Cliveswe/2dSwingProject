@@ -23,8 +23,11 @@ public class ShapeFactory {
 		Shape s = null;
 
 		if (shape.equalsIgnoreCase(MenuBarItemEnum.CIRCLE.label())) {
+
 			s = new Circle(0.0, 0.0, "");
+
 		} else if (shape.equalsIgnoreCase(MenuBarItemEnum.RECTANGLE.label())) {
+
 			s = new Rectangle(0.0, 0.0, "");
 		}
 
