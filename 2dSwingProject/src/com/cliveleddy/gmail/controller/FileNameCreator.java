@@ -14,11 +14,11 @@ public class FileNameCreator {
 	/**
 	 * Create a file name from the name of the art piece and the name of the author.
 	 * If both the art piece name and author are given then the file name will be
-	 * <<Title>> "by" <<Author>>. If either the title or author are missing then the
-	 * "by" is not added to the name of the file.
+	 * "Title" by "Author". If either the title or author are missing then the "by"
+	 * is not added to the name of the file.
 	 * 
-	 * @param drawing a drawing of type Drawing.
-	 * @return a file name as type String.
+	 * @param drawing a drawing of type {@code Drawing}.
+	 * @return a file name as type {@code String}.
 	 */
 	public static String createFileName(Drawing drawing) {
 		String fileName = "";
