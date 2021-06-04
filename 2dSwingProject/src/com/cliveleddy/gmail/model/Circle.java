@@ -16,10 +16,13 @@ import java.awt.RenderingHints;
  * <h2>Updates for Custom Exception</h2> Added a throwable to methods
  * getCircumference and getArea. In addition, the toString method has been
  * amended to reflect the changes to the getArea method.
- * <h2>Added a copy and clone constructors</h2>
+ * <h2>Added a copy and clone constructors</h2> *
+ * <p>
+ * <h2>Step 9</h2> Made use of the lambda functions from the abstract class
+ * Shape.
  * 
  * @author Clive Leddy
- * @version 1.2
+ * @version 1.3
  */
 public class Circle extends Shape {
 
@@ -62,10 +65,9 @@ public class Circle extends Shape {
 	 */
 	public double getRadius() throws ShapeException {
 
-		if (points.get(1) != null) {
+		if (secondPoint.get() != null) {
 
-			return calculateRadius(points.get(0).get_x(), points.get(0).get_y(), points.get(1).get_x(),
-					points.get(1).get_y());
+			return calculateRadius(startX.get(), startY.get(), secondX.get(), secondY.get());
 		}
 
 		throw new ShapeException(END_POINT_ERROR_MESSAGE);
@@ -110,9 +112,9 @@ public class Circle extends Shape {
 	@Override
 	public void draw(Graphics g) {
 
-		Double width = points.get(1).get_x() - points.get(0).get_x();
+		Double width = secondX.get() - startX.get();
 
-		Double height = points.get(1).get_y() - points.get(0).get_y();
+		Double height = secondY.get() - startY.get();
 
 		// anti-aliasing
 		RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -123,7 +125,7 @@ public class Circle extends Shape {
 
 		g2.setColor(Color.decode(getColor()));
 
-		g2.fillOval((int) points.get(0).get_x(), (int) points.get(0).get_y(), width.intValue(), height.intValue());
+		g2.fillOval(startX.get().intValue(), startY.get().intValue(), width.intValue(), height.intValue());
 	}
 
 	/**
@@ -213,14 +215,12 @@ public class Circle extends Shape {
 		}
 
 		// start point
-		res += points.get(0) != null ? String.format("start=%.1f, %.1f", points.get(0).get_x(), points.get(0).get_y())
-				: startP_NA;
+		res += startPoint.get() != null ? String.format("start=%.1f, %.1f", startX.get(), startY.get()) : startP_NA;
 
 		res += del;
 
 		// end point
-		res += points.get(1) != null ? String.format("end=%.1f, %.1f", points.get(1).get_x(), points.get(1).get_y())
-				: endP_NA;
+		res += secondPoint.get() != null ? String.format("end=%.1f, %.1f", secondX.get(), secondY.get()) : endP_NA;
 
 		res += del;
 

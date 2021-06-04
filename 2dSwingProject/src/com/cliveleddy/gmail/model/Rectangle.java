@@ -17,9 +17,12 @@ import java.awt.Graphics2D;
  * getHeight methods.
  * 
  * <h2>Added a copy and clone constructors</h2>
+ * <p>
+ * <h2>Step 9</h2> Made use of the lambda functions from the abstract class
+ * Shape.
  * 
  * @author Clive Leddy
- * @version 2.2
+ * @version 2.3
  */
 public class Rectangle extends Shape {
 
@@ -69,7 +72,7 @@ public class Rectangle extends Shape {
 	 */
 	Double getHeight() throws ShapeException {
 
-		if (points.get(1) != null) {
+		if (startPoint.get() != null) {
 
 			return Math.abs(calculateHeight());
 		}
@@ -86,12 +89,12 @@ public class Rectangle extends Shape {
 
 		// transpose the y coordinates to the positive quadrant if the y value
 		// of the end point is negative.
-		if (points.get(1).get_y() < 0) {
+		if (secondY.get() < 0) {
 
-			return Math.abs(points.get(1).get_y()) + points.get(0).get_y();
+			return Math.abs(secondY.get()) + startY.get();
 		}
 
-		return points.get(1).get_y() - points.get(0).get_y();
+		return secondY.get() - startY.get();
 	}
 
 	/**
@@ -102,7 +105,7 @@ public class Rectangle extends Shape {
 	 */
 	Double getWidth() throws ShapeException {
 
-		if (points.get(1) != null) {
+		if (secondPoint.get() != null) {
 
 			return Math.abs(calculateWidth());
 		}
@@ -118,12 +121,12 @@ public class Rectangle extends Shape {
 	private double calculateWidth() {
 		// transpose the x coordinates to the positive quadrant if the x value
 		// of the start point is negative.
-		if (points.get(0).get_x() < 0) {
+		if (startX.get() < 0) {
 
-			return Math.abs(points.get(0).get_x()) + points.get(1).get_x();
+			return Math.abs(startX.get()) + secondX.get();
 		}
 
-		return points.get(1).get_x() - points.get(0).get_x();
+		return secondX.get() - startX.get();
 	}
 
 	/**
@@ -246,7 +249,8 @@ public class Rectangle extends Shape {
 
 		g2.setColor(Color.decode(getColor()));
 
-		g2.fillRect((int) points.get(0).get_x(), (int) points.get(0).get_y(), width, height);
+		g2.fillRect(startX.get().intValue(), startY.get().intValue(), width, height);
+
 	}
 
 	/**
@@ -288,12 +292,10 @@ public class Rectangle extends Shape {
 		}
 
 		// start point
-		res += points.get(0) != null ? String.format("start=%.1f, %.1f", points.get(0).get_x(), points.get(0).get_y())
-				: startP_NA;
+		res += startPoint.get() != null ? String.format("start=%.1f, %.1f", startX.get(), startY.get()) : startP_NA;
 		res += del;
 		// end point
-		res += points.get(1) != null ? String.format("end=%.1f, %.1f", points.get(1).get_x(), points.get(1).get_y())
-				: endP_NA;
+		res += secondPoint.get() != null ? String.format("end=%.1f, %.1f", secondX.get(), secondY.get()) : endP_NA;
 		res += del;
 
 		// get width

@@ -2,6 +2,8 @@ package com.cliveleddy.gmail.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * <h1>Class Shape</h1> This is a base class that is used to describe different
@@ -15,14 +17,21 @@ import java.util.Iterator;
  * <p>
  * <h2>Updates for Step 3</h2> Added a throwable to methods getCircumference and
  * getArea.
- * 
+ * <p>
  * <h2>Step 6</h2> Added a copy and clone constructors. Also included is an
  * isValid method that checks if the shape has a colour and that all points are
  * not null. Two new overloaded methods have been added to set the starting
  * point of the shape.
+ * <p>
+ * <h2>Step 9</h2> To further enhance encapsulation in this abstract class we
+ * add lambda expressions. The details on how to retrieve different Point
+ * coordinates are encapsulated using Java Functional interface with lambda
+ * expressions. The consequences are that the detail of indexing the list of
+ * points remains in the abstract class as well as any changes that maybe made
+ * to the list.
  * 
  * @author Clive Leddy
- * @version 2.2
+ * @version 2.3
  */
 public abstract class Shape implements IDrawable, Cloneable {
 
@@ -33,6 +42,43 @@ public abstract class Shape implements IDrawable, Cloneable {
 
 	// a list of coordinates to draw the shape.
 	protected ArrayList<Point> points;
+
+	/**
+	 * Functional interface with lambda expressions.
+	 */
+	protected Function<Point, Double> pointX = p -> {
+		return p.get_x();
+	};
+
+	protected Function<Point, Double> pointY = p -> {
+		return p.get_y();
+	};
+
+	protected Supplier<Double> startX = () -> {
+
+		return pointX.apply(points.get(0));
+	};
+
+	protected Supplier<Double> startY = () -> {
+
+		return pointY.apply(points.get(0));
+	};
+
+	protected Supplier<Double> secondX = () -> {
+		return pointX.apply(points.get(1));
+	};
+
+	protected Supplier<Double> secondY = () -> {
+		return pointY.apply(points.get(1));
+	};
+
+	protected Supplier<Point> startPoint = () -> {
+		return points.get(0);
+	};
+
+	protected Supplier<Point> secondPoint = () -> {
+		return points.get(1);
+	};
 
 	/**
 	 * Point p is the starting point for a shape of colour color.
