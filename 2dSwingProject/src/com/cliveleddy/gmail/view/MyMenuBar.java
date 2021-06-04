@@ -15,7 +15,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.cliveleddy.gmail.controller.CommandBroker;
 import com.cliveleddy.gmail.controller.FileHandler;
 import com.cliveleddy.gmail.controller.FileNameCreator;
-import com.cliveleddy.gmail.controller.ICommand;
 import com.cliveleddy.gmail.controller.MenuBarItemEnum;
 import com.cliveleddy.gmail.model.Drawing;
 import com.cliveleddy.gmail.model.ShapeException;
@@ -39,10 +38,30 @@ import com.cliveleddy.gmail.model.ShapeException;
  * <h2>Step 8</h2> The classes Broker, ICommand and MenyBarItemEnum have been
  * relocated to the controller package.
  * <p>
- * <h2>Step 9</h2> Moved the interface ILabled to a file.
+ * <h2>Step 9</h2> Moved the interface ILabled to a file. The commands that are
+ * stored in the Broker collection have been replaced with lambda expressions
+ * that implement {@code interface ICommand} class. The broker is used in the
+ * method {@code public void actionPerformed(ActionEvent e)} Replaced and
+ * removed the following internal classes with lambda expressions:
+ * {@code class Load implements ICommand}.
+ * {@code class SaveAs implements ICommand} Save is a statement block that also
+ * calls a Functional interface lambda expression.
+ * {@code class Exit implements ICommand}.
+ * {@code class Undo implements ICommand}.
+ * {@code class Info implements ICommand}.
+ * {@code class UpdateName implements ICommand}.
+ * {@code class UpdateAuthor implements ICommand}.
+ * {@code class NewNameAuthor implements ICommand}.
+ * 
+ * Replacing classes with lambda functions solve the vertical problem caused by
+ * internal classes.
+ * 
+ * Move the broker initialisation and population to a separate method
+ * {@code initialiseBroker()}. This change also improves the responsive of the
+ * application.
  * 
  * @author Clive Leddy
- * @version 1.4
+ * @version 2.0
  */
 public class MyMenuBar extends JMenuBar implements ILabeled {
 	private static final long serialVersionUID = -1336076929035881984L;
@@ -79,6 +98,11 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 	// LISTENER LISTS
 	// a list of listeners for the menu bar drawing object.
 	private EventListenerList menuBarDrawingListenerList = new EventListenerList();
+	private CommandBroker broker;// Broker of commands.
+
+	/*
+	 * Lambda functions.
+	 */
 
 	/**
 	 * Class constructor.
@@ -99,12 +123,109 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 	 * Create the menu bars functions, File and Edit.
 	 */
 	private void initialiseMenuBar() {
+		// Broker
+		initialiseBroker();
 
 		// File menu
 		add(initialiseFileMenu(new JMenu(MenuBarItemEnum.FILE.label())));
 
 		// Edit menu
 		add(initialiseEditMenu(new JMenu(MenuBarItemEnum.EDIT.label())));
+	}
+
+	/**
+	 * Create a broker and add commands to the broker.
+	 */
+	private void initialiseBroker() {
+
+		broker = new CommandBroker();
+
+		// New
+		broker.addCommand(MenuBarItemEnum.NEW.label(), () -> {
+			InputTextDialog inputTextDialogName = new InputTextDialog(MenuBarItemEnum.NEW_DRAWING_NAME_PROMPT.label(),
+					jPaintFrame);
+
+			InputTextDialog inputTextDialogAuthor = new InputTextDialog(
+					MenuBarItemEnum.NEW_DRAWING_AUTHOR_PROMPT.label(), jPaintFrame);
+
+			inputTextDialogName.newName();
+
+			inputTextDialogAuthor.newAuthor();
+
+			inputTextDialogName.getDrawing().setAuthor(inputTextDialogAuthor.getDrawing().getAuthor());
+
+			// re-set the drawing object.
+			setDrawingObject(inputTextDialogName.getDrawing(), MenuBarItemEnum.NEW.label());
+		});
+
+		// Update author
+		broker.addCommand(MenuBarItemEnum.AUTHOR.label(), () -> {
+			InputTextDialog inputTextDialog = new InputTextDialog(MenuBarItemEnum.DRAWING_AUTHOR.label(), jPaintFrame);
+			inputTextDialog.updateAuthor();
+			setDrawingObject(inputTextDialog.getDrawing(), MenuBarItemEnum.AUTHOR.label());
+		});
+
+		// Update name
+		broker.addCommand(MenuBarItemEnum.NAME.label(), () -> {
+			InputTextDialog inputTextDialog = new InputTextDialog(MenuBarItemEnum.DRAWING_NAME.label(), jPaintFrame);
+			inputTextDialog.updateName();
+			setDrawingObject(inputTextDialog.getDrawing(), MenuBarItemEnum.NAME.label());
+		});
+
+		// SaveAs
+		broker.addCommand(MenuBarItemEnum.SAVE_AS.label(), () -> {
+			/**
+			 * Function interface implementation.
+			 */
+			IMyFunctionalInterface<String, Drawing> mf = (draw) -> {
+
+				String str = "";
+				str = FileNameCreator.createFileName(draw);
+
+				return str += MenuBarItemEnum.DOT_SHAPE.label();
+			};
+
+			new InputTextDialog(MenuBarItemEnum.DRAWING_NAME.label(), jPaintFrame)
+					.saveAs(mf.execute(jPaintFrame.getDrawingPanel().getDrawing()));
+		});
+
+		// Exit
+		broker.addCommand(MenuBarItemEnum.EXIT.label(), () -> System.exit(0));
+
+		// Undo
+		broker.addCommand(MenuBarItemEnum.UNDO.label(),
+				() -> setDrawingObject(new Drawing(), MenuBarItemEnum.UNDO.label()));
+
+		// Load
+		broker.addCommand(MenuBarItemEnum.LOAD.label(),
+				() -> new InputTextDialog(MenuBarItemEnum.LOAD_PROMPT.label(), jPaintFrame).Load());
+
+		// Info
+		broker.addCommand(MenuBarItemEnum.INFO.label(), () -> {
+
+			Drawing d = jPaintFrame.getDrawingPanel().getDrawing();
+
+			if ((d != null) && !d.isEmpty()) {
+
+				String str = "";
+
+				if (!d.isEmpty()) {
+
+					str = String.format(d.getName() + " by " + d.getAuthor());
+				}
+				if (d.getSize() > 0) {
+
+					str += String.format("\nNumber of shapes: %d", d.getSize());
+
+					str += String.format("\nTotal area: %.1f", d.getTotalArea());
+
+					str += String.format("\nTotal circumference: %f", d.getTotalCircumference());
+				}
+
+				JOptionPane.showMessageDialog(jPaintFrame, str);
+			}
+		});
+
 	}
 
 	/**
@@ -256,28 +377,6 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String itemName = e.getActionCommand();
-
-			CommandBroker broker = new CommandBroker();
-
-			broker.addCommand(MenuBarItemEnum.NEW.label(),
-					new NewNameAuthorInput(MenuBarItemEnum.NEW_DRAWING_NAME_PROMPT.label(),
-							MenuBarItemEnum.NEW_DRAWING_AUTHOR_PROMPT.label(), jPaintFrame));
-			broker.addCommand(MenuBarItemEnum.AUTHOR.label(),
-					new UpdateAuthorInput(MenuBarItemEnum.DRAWING_AUTHOR.label(), jPaintFrame));
-
-			broker.addCommand(MenuBarItemEnum.NAME.label(),
-					new UpdateNameInput(MenuBarItemEnum.DRAWING_NAME.label(), jPaintFrame));
-
-			broker.addCommand(MenuBarItemEnum.SAVE_AS.label(),
-					new SaveAs(MenuBarItemEnum.DRAWING_NAME.label(), jPaintFrame));
-
-			broker.addCommand(MenuBarItemEnum.EXIT.label(), new Exit());
-
-			broker.addCommand(MenuBarItemEnum.UNDO.label(), new Undo());
-
-			broker.addCommand(MenuBarItemEnum.LOAD.label(), new Load(MenuBarItemEnum.LOAD_PROMPT.label(), jPaintFrame));
-
-			broker.addCommand(MenuBarItemEnum.INFO.label(), new Info(jPaintFrame));
 
 			broker.runCommand(itemName);
 		}
@@ -544,250 +643,6 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 		public void Load() {
 
 			setDrawingObject(getLoadFileChooserDialog(MenuBarItemEnum.SHAPE.label()), MenuBarItemEnum.LOAD.label());
-		}
-	}
-
-	/**
-	 * Command design pattern UpdateNameInput.
-	 * 
-	 * @author Clive Leddy
-	 * @version 1.0
-	 *
-	 */
-	public class UpdateNameInput implements ICommand {
-
-		private InputTextDialog inputTextDialog;
-
-		/**
-		 * Class constructor .
-		 * 
-		 * @param outText     text to be displayed in a pop up dialog.
-		 * @param jPaintFrame application container window.
-		 */
-		public UpdateNameInput(String outText, JPaintFrame jPaintFrame) {
-
-			inputTextDialog = new InputTextDialog(outText, jPaintFrame);
-		}
-
-		/**
-		 * Implementation of the ICommand method. Use a pop up to get the name of the
-		 * art piece.
-		 */
-		@Override
-		public void execute() {
-
-			inputTextDialog.updateName();
-
-			// re-set the drawing object.
-			setDrawingObject(inputTextDialog.getDrawing(), MenuBarItemEnum.NAME.label());
-		}
-	}
-
-	public class UpdateAuthorInput implements ICommand {
-
-		private InputTextDialog inputTextDialog;
-
-		/**
-		 * Class constructor .
-		 * 
-		 * @param outText     text to be displayed in a pop up dialog.
-		 * @param jPaintFrame application container window.
-		 */
-		public UpdateAuthorInput(String outText, JPaintFrame jPaintFrame) {
-
-			inputTextDialog = new InputTextDialog(outText, jPaintFrame);
-		}
-
-		/**
-		 * Implementation of the ICommand method. Use a pop up to get the name of the
-		 * author.
-		 */
-		@Override
-		public void execute() {
-
-			inputTextDialog.updateAuthor();
-
-			// re-set the drawing object.
-			setDrawingObject(inputTextDialog.getDrawing(), MenuBarItemEnum.AUTHOR.label());
-		}
-	}
-
-	public class NewNameAuthorInput implements ICommand {
-
-		private InputTextDialog inputTextDialogName;
-
-		private InputTextDialog inputTextDialogAuthor;
-
-		/**
-		 * Class constructor.
-		 * 
-		 * @param outTextName   name of the art piece as text to be displayed in a pop
-		 *                      up dialog.
-		 * @param outTextAuthor name of the author as text to be displayed in a pop up
-		 *                      dialog.
-		 * @param jPaintFrame   application container window.
-		 */
-		public NewNameAuthorInput(String outTextName, String outTextAuthor, JPaintFrame jPaintFrame) {
-
-			inputTextDialogName = new InputTextDialog(outTextName, jPaintFrame);
-
-			inputTextDialogAuthor = new InputTextDialog(outTextAuthor, jPaintFrame);
-		}
-
-		/**
-		 * Implementation of the ICommand method. Use a pop up to get the name of the
-		 * art piece and the name of the author.
-		 */
-		@Override
-		public void execute() {
-
-			inputTextDialogName.newName();
-
-			inputTextDialogAuthor.newAuthor();
-
-			inputTextDialogName.getDrawing().setAuthor(inputTextDialogAuthor.getDrawing().getAuthor());
-
-			// re-set the drawing object.
-			setDrawingObject(inputTextDialogName.getDrawing(), MenuBarItemEnum.NEW.label());
-		}
-	}
-
-	public class SaveAs implements ICommand {
-
-		private InputTextDialog inputTextDialogSaveAs;
-
-		/**
-		 * Class constructor.
-		 * 
-		 * @param outTextSaveAs text to be display in the pop up dialog, type String.
-		 * @param jPaintFrame   application container window.
-		 */
-		public SaveAs(String outTextSaveAs, JPaintFrame jPaintFrame) {
-
-			inputTextDialogSaveAs = new InputTextDialog(outTextSaveAs, jPaintFrame);
-		}
-
-		/**
-		 * Implementation of the ICommand method. Use a pop up to get the file name used
-		 * to save a drawing to a file.
-		 */
-		@Override
-		public void execute() {
-
-			/**
-			 * Function interface implementation.
-			 */
-			IMyFunctionalInterface<String, Drawing> mf = (draw) -> {
-
-				String str = "";
-				str = FileNameCreator.createFileName(draw);
-
-				return str += MenuBarItemEnum.DOT_SHAPE.label();
-			};
-
-			inputTextDialogSaveAs.saveAs(mf.execute(jPaintFrame.getDrawingPanel().getDrawing()));
-		}
-	}
-
-	public class Exit implements ICommand {
-
-		public Exit() {
-		}
-
-		@Override
-		public void execute() {
-
-			System.exit(0);
-		}
-	}
-
-	public class Undo implements ICommand {
-
-		public Undo() {
-		}
-
-		@Override
-		public void execute() {
-
-			setDrawingObject(new Drawing(), MenuBarItemEnum.UNDO.label());
-		}
-	}
-
-	public class Load implements ICommand {
-
-		private InputTextDialog inputTextDialog;
-
-		/**
-		 * Class constructor.
-		 *
-		 * @param outText     text to be display in the pop up dialog, type String.
-		 * @param jPaintFrame application container window.
-		 */
-		public Load(String outText, JPaintFrame jPaintFrame) {
-
-			inputTextDialog = new InputTextDialog(outText, jPaintFrame);
-		}
-
-		/**
-		 * Implementation of the ICommand method. Use a pop up to get the file name used
-		 * to load a drawing from a file.
-		 */
-		@Override
-		public void execute() {
-
-			inputTextDialog.Load();
-		}
-	}
-
-	public class Info implements ICommand {
-
-		// default title and icon
-		private JPaintFrame jPaintFrame;
-
-		public Info(JPaintFrame jPaintFrame) {
-
-			this.jPaintFrame = jPaintFrame;
-		}
-
-		/**
-		 * Create an info message from a drawing.
-		 * 
-		 * @param d a drawing of type Drawing.
-		 * @return a message as a String.
-		 */
-		private String generateMessage(Drawing d) {
-
-			String str = "";
-
-			if (!d.isEmpty()) {
-
-				str = String.format(d.getName() + " by " + d.getAuthor());
-			}
-			if (d.getSize() > 0) {
-
-				str += String.format("\nNumber of shapes: %d", d.getSize());
-
-				str += String.format("\nTotal area: %.1f", d.getTotalArea());
-
-				str += String.format("\nTotal circumference: %f", d.getTotalCircumference());
-			}
-
-			return str;
-		}
-
-		/**
-		 * Implementation of the ICommand method. Use a pop up to display the drawing
-		 * info.
-		 */
-		@Override
-		public void execute() {
-
-			Drawing d = jPaintFrame.getDrawingPanel().getDrawing();
-
-			if ((d != null) && !d.isEmpty()) {
-
-				JOptionPane.showMessageDialog(jPaintFrame, generateMessage(d));
-			}
 		}
 	}
 
