@@ -27,7 +27,7 @@ import com.cliveleddy.gmail.view.JPaintFrame;
  * @version 1.0
  */
 
-public class Step8 {
+public class Step9 {
 
 	public static void main(String[] args) {
 		// Make sure GUI is created on the event dispatching thread.
