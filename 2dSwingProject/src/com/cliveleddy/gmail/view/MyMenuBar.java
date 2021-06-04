@@ -21,25 +21,30 @@ import com.cliveleddy.gmail.model.Drawing;
 import com.cliveleddy.gmail.model.ShapeException;
 
 /**
- * <h1>Step 4</h1> Create the applications menu bar and add items to each menu.
+ * <h1>Class MyMenuBar</h1>
+ * <h2>Step 4</h2> Create the applications menu bar and add items to each menu.
  * It extends the JMenuBar swing.
  * <p>
- * <h1>Step 5</h1> Add the action listeners to each of the menu items. These
+ * <h2>Step 5</h2> Add the action listeners to each of the menu items. These
  * Listeners will in turn perform tasks.
- * <h1>Step 6</h1>Added additional logic to the menu items. In addition,
+ * <p>
+ * <h2>Step 6</h2>Added additional logic to the menu items. In addition,
  * replacing both the MBTextEnum and the Dictionary Text with a Enum class
  * called MenuBarItemEnum. This makes for a cleaner code style. Also the Enum
  * class allows for additional logic at a later date. In the actionPerfromed
  * method all the if logic has been replaced with a
- * <h2>Command Design Pattern</h2>. This pattern allows for additional logic to
+ * <h3>Command Design Pattern</h3>. This pattern allows for additional logic to
  * be added to classes that implement the different commands from the menu.
- * <h1>Step 8</h1> The classes Broker, ICommand and MenyBarItemEnum have been
+ * <p>
+ * <h2>Step 8</h2> The classes Broker, ICommand and MenyBarItemEnum have been
  * relocated to the controller package.
+ * <p>
+ * <h2>Step 9</h2> Moved the interface ILabled to a file.
  * 
  * @author Clive Leddy
  * @version 1.4
  */
-public class MyMenuBar extends JMenuBar {
+public class MyMenuBar extends JMenuBar implements ILabeled {
 	private static final long serialVersionUID = -1336076929035881984L;
 
 	/**
@@ -63,17 +68,6 @@ public class MyMenuBar extends JMenuBar {
 		 * @return type R.
 		 */
 		public R execute(T t);
-	}
-
-	/**
-	 * <h1>Interface class ILabeled.</h1> This is used to get a Enum as a string.
-	 * 
-	 * @author Clive Leddy
-	 * @version 1.0
-	 *
-	 */
-	public interface ILabeled {
-		String label();
 	}
 
 	// reference to the main JFrame

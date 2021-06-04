@@ -1,11 +1,9 @@
 package com.cliveleddy.gmail.controller;
 
-import com.cliveleddy.gmail.view.MyMenuBar.ILabeled;
-
 /**
- * A Enum class that contains the names of the menu items. This class has
- * additional logic for looking up an class constant and returning it as a
- * String.
+ * <h1>Enum class MenuBarItemEnum</h1> A Enum class that contains constants as
+ * names of menu items. This class has additional logic for looking up an enum
+ * class constant and returning it as a String.
  * 
  * @author Clive Leddy
  * @version 1.0
@@ -26,7 +24,7 @@ public enum MenuBarItemEnum implements ILabeled {
 	}
 
 	/**
-	 * Get the text version from the Enum class.
+	 * Get the text version of the constant from the Enum class.
 	 * 
 	 * @return a label as type String.
 	 */
