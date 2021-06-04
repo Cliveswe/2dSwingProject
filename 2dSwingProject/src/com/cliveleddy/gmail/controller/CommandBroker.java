@@ -17,9 +17,9 @@ public class CommandBroker {
 	/**
 	 * Add a command to the container of commands.
 	 * 
-	 * @param item       item a item key as type String.
+	 * @param item       item a item key as type {@code String}.
 	 * @param menCommand the command to be stored in the container as a type
-	 *                   ICommand.
+	 *                   {@code ICommand}.
 	 */
 	public void addCommand(String item, ICommand menCommand) {
 
@@ -29,7 +29,7 @@ public class CommandBroker {
 	/**
 	 * Run a requested command.
 	 * 
-	 * @param item a item key as type String.
+	 * @param item a item key as type {@code String}.
 	 */
 	public void runCommand(String item) {
 
