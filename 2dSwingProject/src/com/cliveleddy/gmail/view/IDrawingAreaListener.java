@@ -3,8 +3,8 @@ package com.cliveleddy.gmail.view;
 import java.util.EventListener;
 
 /**
- * <h1>Interface that specifies what class should listen to the event
- * object.</h1>
+ * <h1>Interface IDrawingAreaListener</h1> Specifies what class should listen to
+ * the event object.
  * 
  * @author Clive Leddy
  * @version 1.0
