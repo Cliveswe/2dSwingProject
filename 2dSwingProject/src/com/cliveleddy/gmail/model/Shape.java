@@ -27,7 +27,7 @@ import java.util.function.Supplier;
  * add lambda expressions. The details on how to retrieve different Point
  * coordinates are encapsulated using Java Functional interface with lambda
  * expressions. The consequences are that the detail of indexing the list of
- * points remains in the abstract class as well as any changes that maybe made
+ * points remains in the abstract class as well as any changes that may be made
  * to the list.
  * 
  * @author Clive Leddy
