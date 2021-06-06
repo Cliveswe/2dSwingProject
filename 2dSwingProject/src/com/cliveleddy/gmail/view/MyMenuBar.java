@@ -1,7 +1,5 @@
 package com.cliveleddy.gmail.view;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JFileChooser;
@@ -59,9 +57,14 @@ import com.cliveleddy.gmail.model.ShapeException;
  * Move the broker initialisation and population to a separate method
  * {@code initialiseBroker()}. This change also improves the responsive of the
  * application.
+ * <p>
+ * Added a lambda function that implements the functional interface IMyMenuItem.
+ * The functional interface IMyMenuItem replaces the inner class MyMenuItem. The
+ * inner class MyMenuItem has now been deleted.
+ * 
  * 
  * @author Clive Leddy
- * @version 2.0
+ * @version 2.1
  */
 public class MyMenuBar extends JMenuBar implements ILabeled {
 	private static final long serialVersionUID = -1336076929035881984L;
@@ -103,6 +106,23 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 	/*
 	 * Lambda functions.
 	 */
+	/**
+	 * Lambda function that implements the functional interface IMyMenuItem.
+	 *
+	 * @param id is the title of the menu item as type {@code String}
+	 * @return the menu item {@code JMenuItem}
+	 */
+	private IMyMenuItem myMenuItem = (id) -> {
+		JMenuItem jmi = new JMenuItem();// A new menu item.
+
+		// Set the title of the menu item. A menu item is a button!
+		jmi.setText(id);
+
+		// Add a command from the broker to the menu item.
+		jmi.addActionListener(e -> broker.runCommand(e.getActionCommand()));
+
+		return jmi;
+	};
 
 	/**
 	 * Class constructor.
@@ -160,15 +180,21 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 
 		// Update author
 		broker.addCommand(MenuBarItemEnum.AUTHOR.label(), () -> {
+
 			InputTextDialog inputTextDialog = new InputTextDialog(MenuBarItemEnum.DRAWING_AUTHOR.label(), jPaintFrame);
+
 			inputTextDialog.updateAuthor();
+
 			setDrawingObject(inputTextDialog.getDrawing(), MenuBarItemEnum.AUTHOR.label());
 		});
 
 		// Update name
 		broker.addCommand(MenuBarItemEnum.NAME.label(), () -> {
+
 			InputTextDialog inputTextDialog = new InputTextDialog(MenuBarItemEnum.DRAWING_NAME.label(), jPaintFrame);
+
 			inputTextDialog.updateName();
+
 			setDrawingObject(inputTextDialog.getDrawing(), MenuBarItemEnum.NAME.label());
 		});
 
@@ -198,7 +224,7 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 
 		// Load
 		broker.addCommand(MenuBarItemEnum.LOAD.label(),
-				() -> new InputTextDialog(MenuBarItemEnum.LOAD_PROMPT.label(), jPaintFrame).Load());
+				() -> new InputTextDialog(MenuBarItemEnum.LOAD_PROMPT.label(), jPaintFrame).load());
 
 		// Info
 		broker.addCommand(MenuBarItemEnum.INFO.label(), () -> {
@@ -236,21 +262,21 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 	private JMenu initialiseFileMenu(JMenu mFile) {
 
 		// new Menu Item
-		mFile.add(new myJMenuItem(MenuBarItemEnum.NEW.label()));
+		mFile.add(myMenuItem.createItem(MenuBarItemEnum.NEW.label()));
 
 		// save as Menu Item
-		mFile.add(new myJMenuItem(MenuBarItemEnum.SAVE_AS.label()));
+		mFile.add(myMenuItem.createItem(MenuBarItemEnum.SAVE_AS.label()));
 
 		// load Menu Item
-		mFile.add(new myJMenuItem(MenuBarItemEnum.LOAD.label()));
+		mFile.add(myMenuItem.createItem(MenuBarItemEnum.LOAD.label()));
 
 		// info Menu Item
-		mFile.add(new myJMenuItem(MenuBarItemEnum.INFO.label()));
+		mFile.add(myMenuItem.createItem(MenuBarItemEnum.INFO.label()));
 
 		mFile.addSeparator();
 
 		// exit Menu Item
-		mFile.add(new myJMenuItem(MenuBarItemEnum.EXIT.label()));
+		mFile.add(myMenuItem.createItem(MenuBarItemEnum.EXIT.label()));
 
 		return mFile;
 	}
@@ -263,13 +289,13 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 	private JMenu initialiseEditMenu(JMenu mEdit) {
 
 		// Undo
-		mEdit.add(new myJMenuItem(MenuBarItemEnum.UNDO.label()));
+		mEdit.add(myMenuItem.createItem(MenuBarItemEnum.UNDO.label()));
 
 		// Drawing title
-		mEdit.add(new myJMenuItem(MenuBarItemEnum.NAME.label()));
+		mEdit.add(myMenuItem.createItem(MenuBarItemEnum.NAME.label()));
 
 		// Drawing author
-		mEdit.add(new myJMenuItem(MenuBarItemEnum.AUTHOR.label()));
+		mEdit.add(myMenuItem.createItem(MenuBarItemEnum.AUTHOR.label()));
 
 		return mEdit;
 	}
@@ -346,40 +372,6 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 	public void removeMenuBarDrawingListener(IDrawingAreaListener<MyDrawingAreaEvent<Drawing>> listener) {
 
 		menuBarDrawingListenerList.remove(IDrawingAreaListener.class, listener);
-	}
-
-	/**
-	 * <h1>Class myJMenuItem</h1> This class both extends the JMenuItem and
-	 * implements the ActionListener class. Extending the JMenuItem means that we
-	 * can add a menu item to the menu bar. Then when a menu item is selected the
-	 * actionPerfromed from the ActionListener is triggered.
-	 * 
-	 * @author Clive Leddy
-	 * @version 1.0
-	 */
-	class myJMenuItem extends JMenuItem implements ActionListener {
-
-		private static final long serialVersionUID = -3898605973624196788L;
-
-		public myJMenuItem(String title) {
-
-			super(title);
-
-			addActionListener(this);
-		}
-
-		/**
-		 * Examining the action event e we can determine what menu item fired this even
-		 * action. Then depending on the menu item this method performs and action.
-		 * 
-		 * @param e the even that occurred as type ActionEven.
-		 */
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			String itemName = e.getActionCommand();
-
-			broker.runCommand(itemName);
-		}
 	}
 
 	/**
@@ -466,6 +458,7 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 		public void updateAuthor() {
 
 			inputText = getInputDialog();
+
 			if (isInputText()) {
 
 				d.setAuthor(inputText);
@@ -489,7 +482,7 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 
 			inputText = getInputDialog();
 
-			if (inputText == null) {
+			if ((inputText == null) || inputText.isBlank()) {
 
 				inputText = "";
 			}
@@ -521,10 +514,12 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 		 * @return a file handler of type FileHandler.
 		 */
 		private FileHandler setFileChooser(String dialogTitle, String initialSelectionValue) {
+
 			FileHandler fileHandler = new FileHandler(MenuBarItemEnum.DRAWING_FILTER.label(),
 					MenuBarItemEnum.SHAPE.label());
 
 			setAcceptAllFileFilterUsed(false);
+
 			setFileFilter(
 					new FileNameExtensionFilter(fileHandler.getFileDescription(), fileHandler.getFileExtension()));
 
@@ -568,6 +563,7 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 				}
 
 			} else {
+
 				// The user did not choose to save the file.
 				JOptionPane.showMessageDialog(jPaintFrame, "Nothing saved.", MenuBarItemEnum.SAVE_AS.label(),
 						JOptionPane.INFORMATION_MESSAGE);
@@ -603,6 +599,7 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 
 					// Restore the current drawing.
 					if (currentDrawing != null) {
+
 						d = currentDrawing;
 					}
 
@@ -632,7 +629,7 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 		 * @param initialSelectionValue file name to save the drawing to as type Object.
 		 */
 		public void saveAs(Object initialSelectionValue) {
-			// inputText = getInputDialog(initialSelectionValue);
+
 			getSaveFileChooserDialog((String) initialSelectionValue);
 		}
 
@@ -640,10 +637,11 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 		 * Menu item method that activates the logic for loading a drawing object from a
 		 * file.
 		 */
-		public void Load() {
+		public void load() {
 
 			setDrawingObject(getLoadFileChooserDialog(MenuBarItemEnum.SHAPE.label()), MenuBarItemEnum.LOAD.label());
 		}
+
 	}
 
 }
