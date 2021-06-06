@@ -31,9 +31,12 @@ import com.cliveleddy.gmail.model.Shape;
  * added. Logic has been added to a mouse motion when either a button or not is
  * pressed. Additional logic has also been added when a mouse button is either
  * pushed or released.
+ * <p>
+ * <h2>Step 9</h2> Replaced inner class SelectedShapeFromToolbar and class
+ * SelectedColourFromToolbar with lambda functions.
  * 
  * @author Clive Leddy
- * @version 2.1
+ * @version 2.2
  *
  */
 public class DrawingPanel extends JPanel {
@@ -59,6 +62,48 @@ public class DrawingPanel extends JPanel {
 	 * Reverse iterator for the ArrayList allShapes.
 	 */
 	private ListIterator<Object> allShapesIterator = allShapes.listIterator();
+
+	/**
+	 * Lambda functions.
+	 */
+
+	/**
+	 * Lambda function that implements the interface class IDrawingAreaListener to
+	 * catch an instance of the MyToolRowEvent event. Then set the shape colour to
+	 * the colour selected from the tool bar.
+	 * 
+	 * @param {@code MyDrawingAreaEvent<Shape>} custom event handler.
+	 * @return void
+	 */
+	private IDrawingAreaListener<MyDrawingAreaEvent<Shape>> selectedShapeFromToolbar = (
+			MyDrawingAreaEvent<Shape> event) -> {
+
+		if (event.getData() != null) {
+
+			shape = event.getData();
+
+		} else {
+
+			shape = null;
+		}
+	};
+
+	/**
+	 * Lambda function that implement the interface class IDrawingAreaListener to
+	 * catch an instance of the MyToolRowEvent event. Then set the shape colour to
+	 * the colour selected from the tool bar. *
+	 * 
+	 * @param {@code MyDrawingAreaEvent<Color>} custom event handler.
+	 * @return void
+	 */
+	private IDrawingAreaListener<MyDrawingAreaEvent<Color>> selectedColourFromToolbar = (
+			MyDrawingAreaEvent<Color> event) -> {
+
+		if (event.getData() != null) {
+
+			colour = event.getData();
+		}
+	};
 
 	/**
 	 * Class constructor.
@@ -90,11 +135,12 @@ public class DrawingPanel extends JPanel {
 	 * Initialise the class.
 	 */
 	private void initialise() {
-		toolbarSelectedColour = new SelectedColourFromToolbar();
+
+		toolbarSelectedColour = selectedColourFromToolbar;
 
 		colour = null;
 
-		toolbarSelectedShape = new SelectedShapeFromToolbar();
+		toolbarSelectedShape = selectedShapeFromToolbar;
 
 		shape = null;
 
@@ -336,33 +382,6 @@ public class DrawingPanel extends JPanel {
 	}
 
 	/**
-	 * <h1>Implement the interface class IDrawingAreaListener that is used to catch
-	 * an instance of the MyToolRowEvent event.</h1> Then set the shape colour to
-	 * the colour selected from the tool bar.
-	 * 
-	 * @author Clive Leddy
-	 * @version 1.0
-	 */
-	class SelectedColourFromToolbar implements IDrawingAreaListener<MyDrawingAreaEvent<Color>> {
-
-		/**
-		 * 
-		 * Query the event object and extract the selected color.
-		 * 
-		 * @param event an event object of type MyDrawingAreaEvent.
-		 * 
-		 */
-		@Override
-		public void drawingAreaEventOccurred(MyDrawingAreaEvent<Color> event) {
-
-			if (event.getData() != null) {
-
-				colour = event.getData();
-			}
-		}
-	}
-
-	/**
 	 * Get the selected colour listener.
 	 * 
 	 * @return the class that is listening for an event.
@@ -370,35 +389,6 @@ public class DrawingPanel extends JPanel {
 	public IDrawingAreaListener<MyDrawingAreaEvent<Color>> getColourSelectedListener() {
 
 		return toolbarSelectedColour;
-	}
-
-	/**
-	 * <h1>Implement the interface class IDrawingAreaListener that is used to catch
-	 * an instance of the MyToolRowEvent event.</h1> Then set the shape colour to
-	 * the colour selected from the tool bar.
-	 * 
-	 * @author Clive Leddy
-	 * @version 1.0
-	 */
-	class SelectedShapeFromToolbar implements IDrawingAreaListener<MyDrawingAreaEvent<Shape>> {
-
-		/**
-		 * 
-		 * Query the event object and extract the shape selected. Convert the
-		 * 
-		 * @param event an event object of type MyDrawingAreaEvent.
-		 * 
-		 */
-		@Override
-		public void drawingAreaEventOccurred(MyDrawingAreaEvent<Shape> event) {
-
-			if (event.getData() != null) {
-
-				shape = event.getData();
-			} else {
-				shape = null;
-			}
-		}
 	}
 
 	/**
