@@ -327,15 +327,13 @@ class MyToolRow extends JPanel implements ActionListener {
 		private int rowNumber = 1;
 
 		// private HashMap<coloursEnum, JButton> ColourTool = new HashMap<>();
-		private Map<ToolRowEnum, JLabel> ColourTool = new HashMap<>();
+		private Map<ToolRowEnum, JLabel> colourTool = new HashMap<>();
 
 		public ColourChoices() {
 
 			super();
 
 			// add a grid layout to the panel
-			// setLayout(new GridLayout(rowNumber, Colours.size()));
-
 			setLayout(new GridLayout(rowNumber, ToolRowEnum.length()));
 
 			// for each colour index, k and colour Color, v.
@@ -361,10 +359,10 @@ class MyToolRow extends JPanel implements ActionListener {
 				colourSelectorLabel.setBackground(v);
 
 				// add the label to the list of labels using the index, k.
-				ColourTool.put(k, colourSelectorLabel);
+				colourTool.put(k, colourSelectorLabel);
 
 				// add the label to the grid.
-				add(ColourTool.get(k));
+				add(colourTool.get(k));
 			});
 		}
 	}
