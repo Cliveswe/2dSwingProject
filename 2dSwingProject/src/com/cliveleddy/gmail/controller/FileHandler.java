@@ -31,9 +31,9 @@ public class FileHandler extends File {
 	 * Class constructor.
 	 * 
 	 * @param description a text description of what file to filter for, type
-	 *                    String.
+	 *                    {@code String}.
 	 * @param extension   the file extension that is allowed in this class, type
-	 *                    String.
+	 *                    {@code String}.
 	 */
 	public FileHandler(String fileDescription, String fileExtension) {
 
@@ -45,7 +45,7 @@ public class FileHandler extends File {
 	/**
 	 * Get a text description of the file to filter.
 	 * 
-	 * @return description of the file to filter for, type String.
+	 * @return description of the file to filter for, type {@code String}.
 	 */
 	public String getFileExtension() {
 
@@ -55,7 +55,7 @@ public class FileHandler extends File {
 	/**
 	 * Get the file extension that is allowed in this class.
 	 * 
-	 * @return file extension that is allowed in this class, type String.
+	 * @return file extension that is allowed in this class, type {@code String}.
 	 */
 	public String getFileDescription() {
 
@@ -65,7 +65,7 @@ public class FileHandler extends File {
 	/**
 	 * Write the art piece title and the authors name to the file.
 	 * 
-	 * @param d       a drawing of type Drawing.
+	 * @param d       a drawing of type {@code Drawing}.
 	 * @param fileOut file descriptor that writes data to a file of type
 	 *                BufferedWriter.
 	 * @throws IOException re-throws an exception that was thrown by BufferedWriter.
@@ -91,10 +91,11 @@ public class FileHandler extends File {
 	/**
 	 * Write the shapes to the file.
 	 * 
-	 * @param d       a drawing of type Drawing.
+	 * @param d       a drawing of type {@code Drawing}.
 	 * @param fileOut file descriptor that writes data to a file of type
 	 *                BufferedWriter.
-	 * @throws IOException re-throws an exception that was thrown by BufferedWriter.
+	 * @throws IOException re-throws an exception that was thrown by
+	 *                     {@code BufferedWriter}.
 	 */
 	private void writeShapes(Drawing drawing, BufferedWriter fileOut) throws IOException {
 
@@ -124,10 +125,10 @@ public class FileHandler extends File {
 	/**
 	 * Save a drawing to a given file name.
 	 * 
-	 * @param drawing  a drawing of type Drawing.
-	 * @param fileName the name of the file as type String.
+	 * @param drawing  a drawing of type {@code Drawing}.
+	 * @param fileName the name of the file as type {@code String}.
 	 * @throws ShapeException, when an exception has been thrown this method creates
-	 *                         a custom exception of type ShapeException.
+	 *                         a custom exception of type {@code ShapeException}.
 	 */
 	public void save(Drawing drawing, String fileName) throws ShapeException {
 		FileWriter fw;
@@ -176,9 +177,9 @@ public class FileHandler extends File {
 	/**
 	 * Save a drawing.
 	 * 
-	 * @param drawing a drawing of type Drawing.
+	 * @param drawing a drawing of type {@code Drawing}.
 	 * @throws ShapeException, when an exception has been thrown this method creates
-	 *                         a custom exception of type ShapeException.
+	 *                         a custom exception of type {@code ShapeException}.
 	 */
 	public void save(Drawing drawing) throws ShapeException {
 
@@ -228,10 +229,11 @@ public class FileHandler extends File {
 	/**
 	 * Get the name of the art piece and author.
 	 * 
-	 * @param d      a drawing to update as type Drawing.
-	 * @param fileIn file descriptor to retrieve data, type BufferedReader.
-	 * @return an updated drawing of type Drawing.
-	 * @throws IOException re-throw and exception that was thrown by BufferedReader.
+	 * @param d      a drawing to update as type {@code Drawing}.
+	 * @param fileIn file descriptor to retrieve data, type {@code BufferedReader}.
+	 * @return an updated drawing of type {@code Drawing}.
+	 * @throws IOException re-throw and exception that was thrown by
+	 *                     {@code BufferedReader}.
 	 */
 	private Drawing getTitleAuthor(Drawing d, BufferedReader fileIn) throws IOException {
 
@@ -251,10 +253,11 @@ public class FileHandler extends File {
 	/**
 	 * Get all the shapes the make up the art piece.
 	 * 
-	 * @param d      a drawing to update as type Drawing.
-	 * @param fileIn file descriptor to retrieve data, type BufferedReader.
+	 * @param d      a drawing to update as type {@code Drawing}.
+	 * @param fileIn file descriptor to retrieve data, type {@code BufferedReader}.
 	 * @return an updated drawing of type Drawing.
-	 * @throws IOException re-throw and exception that was thrown by BufferedReader.
+	 * @throws IOException re-throw and exception that was thrown by
+	 *                     {@code BufferedReader}.
 	 */
 	private Drawing getShapes(Drawing d, BufferedReader fileIn) throws IOException {
 
@@ -286,10 +289,10 @@ public class FileHandler extends File {
 	/**
 	 * Open a file and read its contents.
 	 * 
-	 * @param fileName the name of the file as type String.
-	 * @return an updated drawing of type Drawing.
+	 * @param fileName the name of the file as type {@code String}.
+	 * @return an updated drawing of type {@code Drawing}.
 	 * @throws ShapeException, when an exception has been thrown this method creates
-	 *                         a custom exception of type ShapeException.
+	 *                         a custom exception of type {@code ShapeException}.
 	 */
 	public Drawing load(String fileName) throws ShapeException {
 		FileReader fr;
@@ -343,8 +346,8 @@ public class FileHandler extends File {
 	 * Validate if the file name given is valid. The file name must end with the
 	 * extension given in this class.
 	 * 
-	 * @param fileName file name as type String.
-	 * @return true if the file name is valid, otherwise false.
+	 * @param fileName file name as type {@code String}.
+	 * @return {@code true} if the file name is valid, otherwise {@code false}.
 	 */
 	public boolean isValid(String fileName) {
 
