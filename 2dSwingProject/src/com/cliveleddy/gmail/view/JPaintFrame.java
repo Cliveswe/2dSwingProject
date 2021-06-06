@@ -81,19 +81,19 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 	/**
 	 * Set up and initialise the application window.
 	 */
-	public void Initialise() {
+	public void initialise() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		SetFrameIcon();
+		setFrameIcon();
 
-		SetLookAndFeel();
+		setLookAndFeel();
 
-		SetWindowSize();
+		setWindowSize();
 
-		SetFrameTitle(PaintFrameEnum.TITLE.label);
+		setFrameTitle(PaintFrameEnum.TITLE.label);
 
-		SetLayout();
+		setLayout();
 
 		setVisible(true);
 	}
@@ -101,7 +101,7 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 	/**
 	 * Add an icon to the top left of the JFrame
 	 */
-	public void SetFrameIcon() {
+	public void setFrameIcon() {
 
 		BufferedImage img = null;
 		InputStream stream = null;
@@ -111,8 +111,6 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 			stream = getClass().getResourceAsStream("../resource/favicon-32x32.png");
 
 			img = ImageIO.read(stream);
-
-			// img = ImageIO.read(getClass().getResource("../resource/favicon-32x32.png"));
 
 		} catch (IOException e) {
 
@@ -135,7 +133,7 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 		}
 	}
 
-	private void SetLayout() {
+	private void setLayout() {
 
 		MyStatusBar sb = new MyStatusBar();
 
@@ -147,11 +145,9 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 
 		// add listeners for the different UI events
 		dp.addMouseLocationListener(sb.getMouseLocationListener());
-
 		tr.addToolbarColourSelectedListener(sb.getColourSelectedListener());
 		tr.addToolbarColourSelectedListener(dp.getColourSelectedListener());
 		tr.addToolbarShapeSelectedListener(dp.getShapeSelectedListener());
-
 		mb.addMenuBarDrawingListener(this);
 
 		setLayout(new BorderLayout());
@@ -176,13 +172,12 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 		add(sb, BorderLayout.PAGE_END);
 	}
 
-	private void SetFrameTitle(String frameTitle) {
+	private void setFrameTitle(String frameTitle) {
 
-		// setTitle(getText(UITextEnum.TITLE));
 		setTitle(frameTitle);
 	}
 
-	private void SetLookAndFeel() {
+	private void setLookAndFeel() {
 
 		try {
 
@@ -206,7 +201,7 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 		}
 	}
 
-	private void SetWindowSize() {
+	private void setWindowSize() {
 
 		// set the size of the window
 		setSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -214,13 +209,8 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 		// set the minimum window size
 		setMinimumSize(new Dimension(FRAME_MIN_WIDTH, FRAME_MIN_HEIGHT));
 
-		// this.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
-		// setBounds(POSITION_X, POSITION_Y, FRAME_WIDTH, FRAME_HEIGHT);
-
 		// centre the window on screen
 		setLocationRelativeTo(null);
-		// the window is not re-sizable
-		// setResizable(true);
 
 	}
 
@@ -245,24 +235,14 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 
 				// New Menu
 				if (MenuBarItemEnum.NEW.label() == drawingAreaEvent.getId()) {
-					// updateFrameTitle(drawingAreaEvent.getData().getName(),
-					// drawingAreaEvent.getData().getAuthor());
+
 					dp.setDrawing(drawingAreaEvent.getData());
 
 					updateFrameTitle(dp.getDrawing().getName(), dp.getDrawing().getAuthor());
 				}
 				// Load Menu
 				if (MenuBarItemEnum.LOAD.label() == drawingAreaEvent.getId()) {
-					// updateFrameTitle(drawingAreaEvent.getData().getName(),
-					// drawingAreaEvent.getData().getAuthor());
 
-					/*
-					 * if (!dp.getDrawing().isEmpty()) { dp.resetDrawingPanel();
-					 * dp.addDrawing(drawingAreaEvent.getData()); //
-					 * dp.printComponents(dp.getGraphics()); } else {
-					 * 
-					 * dp.setDrawing(drawingAreaEvent.getData()); }
-					 */
 					dp.resetDrawingPanel();
 					dp.setDrawing(drawingAreaEvent.getData());
 
@@ -270,16 +250,14 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 				}
 				// Edit Name
 				if (MenuBarItemEnum.NAME.label() == drawingAreaEvent.getId()) {
-					// updateFrameTitle(drawingAreaEvent.getData().getName(),
-					// drawingAreaEvent.getData().getAuthor());
+
 					dp.getDrawing().setName(drawingAreaEvent.getData().getName());
 
 					updateFrameTitle(dp.getDrawing().getName(), dp.getDrawing().getAuthor());
 				}
 				// Edit Author
 				if (MenuBarItemEnum.AUTHOR.label() == drawingAreaEvent.getId()) {
-					// updateFrameTitle(drawingAreaEvent.getData().getName(),
-					// drawingAreaEvent.getData().getAuthor());
+
 					dp.getDrawing().setAuthor(drawingAreaEvent.getData().getAuthor());
 
 					updateFrameTitle(dp.getDrawing().getName(), dp.getDrawing().getAuthor());
@@ -328,7 +306,7 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 			str += " - " + author;
 		}
 
-		SetFrameTitle(str);
+		setFrameTitle(str);
 	}
 
 }
