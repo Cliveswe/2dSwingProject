@@ -18,12 +18,12 @@ public class CommandBroker {
 	 * Add a command to the container of commands.
 	 * 
 	 * @param item       item a item key as type {@code String}.
-	 * @param menCommand the command to be stored in the container as a type
+	 * @param menuCommand the command to be stored in the container as a type
 	 *                   {@code ICommand}.
 	 */
-	public void addCommand(String item, ICommand menCommand) {
+	public void addCommand(String item, ICommand menuCommand) {
 
-		menuCommands.put(item, menCommand);
+		menuCommands.put(item, menuCommand);
 	}
 
 	/**
