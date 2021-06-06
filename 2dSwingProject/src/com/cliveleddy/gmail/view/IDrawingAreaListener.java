@@ -10,13 +10,14 @@ import java.util.EventListener;
  * @version 1.0
  *
  */
+@FunctionalInterface
 public interface IDrawingAreaListener<T> extends EventListener {
 
 	/**
 	 * Method that is used to retrieve data from the event object.
 	 * 
 	 * @param drawingAreaEvent object that describes the generic data in the event
-	 *                         as type MyDrawingAreaEvent.
+	 *                         as type {@code MyDrawingAreaEvent}.
 	 */
 	public void drawingAreaEventOccurred(T drawingAreaEvent);
 }
