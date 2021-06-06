@@ -35,7 +35,7 @@ public class Step9 {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				// Start the app
-				new JPaintFrame().Initialise();
+				new JPaintFrame().initialise();
 			}
 		});
 
