@@ -30,3 +30,7 @@ Step7:
 
 Step8: 
 ===
+
+Step9: 
+===
+Added lambda function to replace inner and anomyous classes. Replaced foreach loop with a steam.filter to draw a shape object.
