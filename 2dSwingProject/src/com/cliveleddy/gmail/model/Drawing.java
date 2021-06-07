@@ -20,6 +20,9 @@ import java.util.function.Predicate;
  * {@code resetFilter()} that resets the filter to show all shapes. In addition,
  * added a method {@code setFilter(Predicate<Shape> filter)} to set the logic
  * that show a particular type of shape.
+ * <p>
+ * Replaced the {@code foreach} loop with a stream and filter in the method
+ * {@code draw(Graphics g}.
  * 
  * @author Clive Leddy
  * @version 1.3
@@ -101,13 +104,8 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 	@Override
 	public void draw(Graphics g) {
 
-		for (Shape shape : shapes) {
-
-			if (showShape.test(shape)) {
-
-				shape.draw(g);
-			}
-		}
+		// Use stream with filter to draw shape object.
+		shapes.stream().filter(showShape).forEach(e -> e.draw(g));
 	}
 
 	/**
