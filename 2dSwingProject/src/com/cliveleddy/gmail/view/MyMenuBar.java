@@ -2,11 +2,13 @@ package com.cliveleddy.gmail.view;
 
 import java.io.File;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.event.EventListenerList;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -30,7 +32,7 @@ import com.cliveleddy.gmail.model.ShapeException;
  * called MenuBarItemEnum. This makes for a cleaner code style. Also the Enum
  * class allows for additional logic at a later date. In the actionPerfromed
  * method all the if logic has been replaced with a
- * <h3>Command Design Pattern</h3>. This pattern allows for additional logic to
+ * <h3>Command Design Pattern.</h3> This pattern allows for additional logic to
  * be added to classes that implement the different commands from the menu.
  * <p>
  * <h2>Step 8</h2> The classes Broker, ICommand and MenyBarItemEnum have been
@@ -61,10 +63,14 @@ import com.cliveleddy.gmail.model.ShapeException;
  * Added a lambda function that implements the functional interface IMyMenuItem.
  * The functional interface IMyMenuItem replaces the inner class MyMenuItem. The
  * inner class MyMenuItem has now been deleted.
+ * <p>
+ * Add a new menu that filters shapes to be shown. Updated the broker with the
+ * lambda function for filtering shape objects.
+ * <p>
  * 
  * 
  * @author Clive Leddy
- * @version 2.1
+ * @version 2.3
  */
 public class MyMenuBar extends JMenuBar implements ILabeled {
 	private static final long serialVersionUID = -1336076929035881984L;
@@ -90,6 +96,41 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 		 * @return type R.
 		 */
 		public R execute(T t);
+	}
+
+	/**
+	 * <h1>Interface IMyMenuItem</h1> Create a JMenuItem and give it a title.
+	 * 
+	 * @author Clive Leddy
+	 * @version 1.0
+	 *
+	 */
+	public interface IMyMenuItem {
+		/**
+		 * Create a JMenuItem with a title.
+		 * 
+		 * @param title menu items title as type {@code String}
+		 * @return a {@code JMenuItem}.
+		 */
+		public JMenuItem createItem(String title);
+	}
+
+	/**
+	 * <h1>Interface IMyMenuRadioButtonItem</h1> Create a
+	 * {@code JRadioButtonMenuItem} and give it a title.
+	 * 
+	 * @author Clive Leddy
+	 * @version 1.0
+	 *
+	 */
+	public interface IMyMenuRadioButtonItem {
+		/**
+		 * Create a {@code JRadioButtonMenuItem} with a title.
+		 * 
+		 * @param title menu items title as type {@code String}
+		 * @return a {@code JMenuItem}.
+		 */
+		public JRadioButtonMenuItem createItem(String title);
 	}
 
 	// reference to the main JFrame
@@ -125,6 +166,23 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 	};
 
 	/**
+	 * Lambda function that implements the functional interface
+	 * {@code IMyMenuRadioButtonItem}.
+	 *
+	 * @param id is the title of the radio button item as type {@code String}
+	 * @return the menu item {@code IMyMenuRadioButtonItem}
+	 * 
+	 */
+	private IMyMenuRadioButtonItem myMenuRadioButtonItem = (id) -> {
+		JRadioButtonMenuItem rdmi;
+		// All shapes
+		rdmi = new JRadioButtonMenuItem(id);
+		rdmi.addActionListener(e -> broker.runCommand(e.getActionCommand()));
+
+		return rdmi;
+	};
+
+	/**
 	 * Class constructor.
 	 * 
 	 * @param jPaintFrame application container window.
@@ -151,6 +209,9 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 
 		// Edit menu
 		add(initialiseEditMenu(new JMenu(MenuBarItemEnum.EDIT.label())));
+
+		// Filter menu
+		add(initialiseFilterMenu(new JMenu(MenuBarItemEnum.SHAPE_FILTER.label())));
 	}
 
 	/**
@@ -252,12 +313,64 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 			}
 		});
 
+		// Show all shapes.
+		broker.addCommand(MenuBarItemEnum.ALL_SHAPES.label(), () -> {
+
+			// Get the drawing.
+			Drawing d = jPaintFrame.getDrawingPanel().getDrawing();
+
+			d.resetFilter();
+			setDrawingObject(d, MenuBarItemEnum.ALL_SHAPES.label());
+		});
+
+		// Show Circle shapes.
+		broker.addCommand(MenuBarItemEnum.SHOW_CIRCLE.label(), () -> {
+
+			// Get the drawing.
+			Drawing d = jPaintFrame.getDrawingPanel().getDrawing();
+
+			// Set a filter to show shapes of type circle using lambda function.
+			d.setFilter(e -> {
+				String circle = MenuBarItemEnum.CIRCLE.label().toLowerCase();
+				String eShape = e.getClass().getSimpleName().toLowerCase();
+				if (circle.compareTo(eShape) == 0) {
+					return true;
+				}
+				return false;
+			});
+
+			setDrawingObject(d, MenuBarItemEnum.SHOW_CIRCLE.label());
+		});
+
+		// Show Rectangle shapes.
+		broker.addCommand(MenuBarItemEnum.SHOW_RECTANGLE.label(), () -> {
+
+			// Get the drawing.
+			Drawing d = jPaintFrame.getDrawingPanel().getDrawing();
+
+			// Set a filter to show shapes of type rectangle using lambda function.
+			d.setFilter(e -> {
+
+				String rectangle = MenuBarItemEnum.RECTANGLE.label().toLowerCase();
+				String eShape = e.getClass().getSimpleName().toLowerCase();
+
+				if (rectangle.compareTo(eShape) == 0) {
+					return true;
+				}
+				return false;
+			});
+
+			setDrawingObject(d, MenuBarItemEnum.SHOW_RECTANGLE.label());
+
+		});
+
 	}
 
 	/**
 	 * Add the menu items for a File.
 	 * 
-	 * @param mFile file menu as JMenu.
+	 * @param mFile file menu as {@code JMenu}.
+	 * @return {@code JMenu}.
 	 */
 	private JMenu initialiseFileMenu(JMenu mFile) {
 
@@ -284,7 +397,8 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 	/**
 	 * Add the menu items for a Edit.
 	 * 
-	 * @param mEdit file menu as JMenu.
+	 * @param mEdit file menu as {@code JMenu}.
+	 * @return {@code JMenu}.
 	 */
 	private JMenu initialiseEditMenu(JMenu mEdit) {
 
@@ -301,9 +415,40 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 	}
 
 	/**
+	 * Add radio button items for Filter.
+	 * 
+	 * @param mFilter filter menu as {@code JMenu}.
+	 * @return {@code JMenu}.
+	 */
+	private JMenu initialiseFilterMenu(JMenu mFilter) {
+		JRadioButtonMenuItem rdmi;
+
+		// A group of radio button menu items.
+		ButtonGroup bg = new ButtonGroup();
+
+		// All shapes.
+		rdmi = myMenuRadioButtonItem.createItem(MenuBarItemEnum.ALL_SHAPES.label());
+		rdmi.setSelected(true);// Default selected.
+		bg.add(rdmi);// Add to button group.
+		mFilter.add(rdmi);
+
+		// All circle shapes
+		rdmi = myMenuRadioButtonItem.createItem(MenuBarItemEnum.SHOW_CIRCLE.label());
+		bg.add(rdmi);// Add to button group.
+		mFilter.add(rdmi);
+
+		// All rectangle shapes
+		rdmi = myMenuRadioButtonItem.createItem(MenuBarItemEnum.SHOW_RECTANGLE.label());
+		bg.add(rdmi);// Add to button group.
+		mFilter.add(rdmi);
+
+		return mFilter;
+	}
+
+	/**
 	 * Set the drawing object.
 	 * 
-	 * @param d is a drawing instance of type Drawing.
+	 * @param d is a drawing instance of type {@code Drawing}.
 	 */
 	public void setDrawingObject(Drawing d) {
 
@@ -313,8 +458,8 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 	/**
 	 * Set the drawing object.
 	 * 
-	 * @param d  is a drawing instance of type Drawing.
-	 * @param id menu item id from Map<MBTextEnum, String> Text
+	 * @param d  is a drawing instance of type {@code Drawing}.
+	 * @param id menu item id from {@code Map<MBTextEnum, String> Text}.
 	 */
 	public void setDrawingObject(Drawing d, String id) {
 		// create new source event object
@@ -335,9 +480,9 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 	/**
 	 * The Drawing has either been created or modified, inform all the listeners.
 	 * 
-	 * @param <T>   a generic type as type Drawing
+	 * @param <T>    a generic type as type Drawing
 	 * 
-	 * @param event mle object as MyDrawingAreaEvent
+	 * @param {@code event mle} object as {@code MyDrawingAreaEvent}.
 	 */
 	@SuppressWarnings("unchecked")
 	public void firedDrawingObjectEvent(MyDrawingAreaEvent<Drawing> mle) {
@@ -357,7 +502,7 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 	/**
 	 * Add a listener that is listening for a colour selection from the tool bar.
 	 * 
-	 * @param a reference to a listener of type IDrawingAreaListener
+	 * @param a reference to a listener of type {@code IDrawingAreaListener}.
 	 */
 	public void addMenuBarDrawingListener(IDrawingAreaListener<MyDrawingAreaEvent<Drawing>> listener) {
 
@@ -367,7 +512,7 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 	/**
 	 * Remove a listener that is listening for a colour selection from the tool bar.
 	 * 
-	 * @param a reference to a listener of type IDrawingAreaListener.
+	 * @param a reference to a listener of type {@code IDrawingAreaListener}.
 	 */
 	public void removeMenuBarDrawingListener(IDrawingAreaListener<MyDrawingAreaEvent<Drawing>> listener) {
 
@@ -413,7 +558,7 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 		/**
 		 * Display a pop up input dialog box used for input.
 		 * 
-		 * @return the text entered by the user as type String.
+		 * @return the text entered by the user as type {@code String}.
 		 */
 		private String getInputDialog() {
 
@@ -468,7 +613,7 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 		/**
 		 * Get the current drawing.
 		 * 
-		 * @return the current drawing as type Drawing.
+		 * @return the current drawing as type {@code Drawing}.
 		 */
 		public Drawing getDrawing() {
 
@@ -509,9 +654,9 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 		 * Configure the JFileChooser pop up to filter all files except the shape files.
 		 * 
 		 * @param dialogTitle           the title of the pop up file chooser, as type
-		 *                              String.
-		 * @param initialSelectionValue is a dummy file name, as type String.
-		 * @return a file handler of type FileHandler.
+		 *                              {@code String}.
+		 * @param initialSelectionValue is a dummy file name, as type {@code String}.
+		 * @return a file handler of type {@code FileHandler}.
 		 */
 		private FileHandler setFileChooser(String dialogTitle, String initialSelectionValue) {
 
@@ -535,7 +680,7 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 		 * The pop up dialog file chooser. When activated and given a file name the
 		 * contents of a drawing are saved to a shape file.
 		 * 
-		 * @param initialSelectionValue a file name as type String.
+		 * @param initialSelectionValue a file name as type {@code String}.
 		 */
 		private void getSaveFileChooserDialog(String initialSelectionValue) {
 
@@ -574,7 +719,7 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 		 * The pop up dialog file chooser. When activated a selected shape file is
 		 * opened and the contents of of the file are used to recreate a drawing object.
 		 * 
-		 * @param initialSelectionValue a file name as type String.
+		 * @param initialSelectionValue a file name as type {@code String}.
 		 */
 		private Drawing getLoadFileChooserDialog(String initialSelectionValue) {
 			Drawing d = null, currentDrawing = null;
@@ -626,7 +771,8 @@ public class MyMenuBar extends JMenuBar implements ILabeled {
 		 * Menu item method that activates the logic for saving a drawing object to a
 		 * file.
 		 * 
-		 * @param initialSelectionValue file name to save the drawing to as type Object.
+		 * @param initialSelectionValue file name to save the drawing to as type
+		 *                              {@code Object}.
 		 */
 		public void saveAs(Object initialSelectionValue) {
 
