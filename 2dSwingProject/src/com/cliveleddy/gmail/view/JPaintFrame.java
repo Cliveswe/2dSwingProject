@@ -99,7 +99,7 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 	}
 
 	/**
-	 * Add an icon to the top left of the JFrame
+	 * Add an icon to the top left of the {@code JFrame}.
 	 */
 	public void setFrameIcon() {
 
@@ -225,7 +225,7 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 	 * Construct the title and author in the object drawingAreasEvent to a String.
 	 * This string should be amended to the application title.
 	 * 
-	 * @param event an event object of type MyDrawingAreaEvent.
+	 * @param event an event object of type {@code MyDrawingAreaEvent}.
 	 * 
 	 */
 	public void drawingAreaEventOccurred(MyDrawingAreaEvent<Drawing> drawingAreaEvent) {
@@ -271,6 +271,7 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 
 					updateFrameTitle(dp.getDrawing().getName(), dp.getDrawing().getAuthor());
 				}
+
 			} else {
 
 				updateFrameTitle("", "");
@@ -284,8 +285,8 @@ public class JPaintFrame extends JFrame implements IDrawingAreaListener<MyDrawin
 	/**
 	 * Create a new title for the JFrame title.
 	 * 
-	 * @param title  the title of the artwork as a String.
-	 * @param author the authors name of the artwork as a String.
+	 * @param title  the title of the artwork as a {@code String}.
+	 * @param author the authors name of the artwork as a {@code String}.
 	 */
 	private void updateFrameTitle(String title, String author) {
 
