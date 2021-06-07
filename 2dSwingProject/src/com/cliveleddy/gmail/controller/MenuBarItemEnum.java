@@ -11,7 +11,9 @@ package com.cliveleddy.gmail.controller;
  */
 public enum MenuBarItemEnum implements ILabeled {
 	FILE("File"), NEW("New..."), SAVE_AS("Save as..."), LOAD("Load"), EXIT("Exit"), EDIT("Edit"), UNDO("Undo"),
-	NAME("Name..."), AUTHOR("Author..."), NEW_DRAWING_NAME_PROMPT("Enter new name of the drawing:"),
+	NAME("Name..."), AUTHOR("Author..."), SHAPE_FILTER("Filter"), ALL_SHAPES("Show Circle and Rectangle."),
+	SHOW_CIRCLE("Show Circle."), SHOW_RECTANGLE("Show Rectangle."),
+	NEW_DRAWING_NAME_PROMPT("Enter new name of the drawing:"),
 	NEW_DRAWING_AUTHOR_PROMPT("Enter new author of the drawing:"), SAVE_AS_PROMPT("Save drawing to:"),
 	LOAD_PROMPT("Load drawing from:"), SHAPE("shape"), DOT_SHAPE(".shape"),
 	DRAWING_NAME("Enter the name of the drawing:"), DRAWING_AUTHOR("Enter the autor of the drawing:"), INFO("Info"),
