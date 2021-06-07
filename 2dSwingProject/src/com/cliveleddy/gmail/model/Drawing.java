@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * <h1>Class Drawing</h1> This class will manage a collection of Shape objects.
@@ -14,9 +15,14 @@ import java.util.List;
  * getTotalCircumference and getTotalArea.
  * <p>
  * <h2>Added getters.</h2>Added a getter for both the name and author fields.
+ * <h2>Step 9</h2>Added a filter that when selected filter out all other shapes
+ * except for the shape in the filter logic. Added a method
+ * {@code resetFilter()} that resets the filter to show all shapes. In addition,
+ * added a method {@code setFilter(Predicate<Shape> filter)} to set the logic
+ * that show a particular type of shape.
  * 
  * @author Clive Leddy
- * @version 1.2
+ * @version 1.3
  */
 public class Drawing implements IDrawable, Iterator<Shape> {
 
@@ -28,16 +34,13 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 
 	private int index = 0;
 
+	private Predicate<Shape> showShape;// A filter to show a type of shape.
+
 	/**
 	 * Drawing constructor that initialises the class variables.
 	 */
 	public Drawing() {
-
-		this.name = "";
-
-		this.author = "";
-
-		shapes = new ArrayList<Shape>();
+		this("", "");
 	}
 
 	/**
@@ -53,6 +56,26 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 		this.author = author;
 
 		shapes = new ArrayList<Shape>();
+
+		resetFilter();
+
+	}
+
+	/**
+	 * Set a filter to show a specific type of shape.
+	 * 
+	 * @param filter logic for showing a particular type of shape as type
+	 *               {@code Predicate<Shape>}.
+	 */
+	public void setFilter(Predicate<Shape> filter) {
+		this.showShape = filter;
+	}
+
+	/**
+	 * Reset the filter to show all shapes.
+	 */
+	public void resetFilter() {
+		setFilter(e -> true);
 	}
 
 	/**
@@ -80,15 +103,17 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 
 		for (Shape shape : shapes) {
 
-			shape.draw(g);
-		}
+			if (showShape.test(shape)) {
 
+				shape.draw(g);
+			}
+		}
 	}
 
 	/**
 	 * Set the name of the artwork.
 	 * 
-	 * @param name artwork's title as string.
+	 * @param name artwork's title as {@code String}.
 	 */
 	public void setName(String name) {
 
@@ -98,7 +123,7 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 	/**
 	 * Get the title name of the artwork.
 	 * 
-	 * @return the title as a String.
+	 * @return the title as a {@code String}.
 	 */
 	public String getName() {
 
@@ -108,7 +133,7 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 	/**
 	 * Set the name of the author.
 	 * 
-	 * @param author name as a string.
+	 * @param author name as a {@code String}.
 	 */
 	public void setAuthor(String author) {
 
@@ -119,7 +144,7 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 	/**
 	 * get the authors name of the artwork.
 	 * 
-	 * @return the authors name as a String.
+	 * @return the authors name as a {@code String}.
 	 */
 	public String getAuthor() {
 
@@ -129,7 +154,7 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 	/**
 	 * Add a shape to a collection of shapes.
 	 * 
-	 * @param s a non null object as data type shape.
+	 * @param s a non null object as data type {@code shape}.
 	 */
 	public void addShape(Shape s) {
 
@@ -142,7 +167,7 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 	/**
 	 * Get the number of shape objects in the collection of shapes.
 	 * 
-	 * @return number of objects as an integer.
+	 * @return number of objects as an {@code int}.
 	 */
 	public int getSize() {
 
@@ -154,7 +179,7 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 	 * each shapes total circumference together to calculate the all of the shapes
 	 * circumference as a total.
 	 * 
-	 * @return the total circumference of all shapes as a double.
+	 * @return the total circumference of all shapes as a {@code double}.
 	 */
 	public double getTotalCircumference() {
 
@@ -180,7 +205,7 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 	 * shapes total area together to calculate the all of the shapes area as a
 	 * total.
 	 * 
-	 * @return the total area of all shapes as a double.
+	 * @return the total area of all shapes as a {@code double}.
 	 */
 	public double getTotalArea() {
 
@@ -204,6 +229,8 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 
 	/**
 	 * Is there an additional shape object in the list of shapes.
+	 * 
+	 * @return true if the is another shape otherwise false.
 	 */
 	@Override
 	public boolean hasNext() {
@@ -220,7 +247,10 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 
 	/**
 	 * Get the next shape object in the list of shapes.
+	 * 
+	 * @return the next {@code Shape}.
 	 */
+
 	@Override
 	public Shape next() {
 
@@ -291,4 +321,5 @@ public class Drawing implements IDrawable, Iterator<Shape> {
 
 		return res;
 	}
+
 }
