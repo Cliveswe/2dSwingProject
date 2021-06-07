@@ -22,7 +22,7 @@ import java.util.function.Predicate;
  * that show a particular type of shape.
  * <p>
  * Replaced the {@code foreach} loop with a stream and filter in the method
- * {@code draw(Graphics g}.
+ * {@code draw(Graphics g)}.
  * 
  * @author Clive Leddy
  * @version 1.3
