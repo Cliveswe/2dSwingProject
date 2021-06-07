@@ -22,12 +22,14 @@ import com.cliveleddy.gmail.view.JPaintFrame;
  * <p>
  * <h1>Step 8</h1> This class is the starting point for beta version of the
  * application. It is also the start for version 1 of the application.
+ * <h1>Step 9</h1>This class is the starting point for version 1.0 of the
+ * application.
  * 
  * @author Clive Leddy
  * @version 1.0
  */
 
-public class Step9 {
+public class Graphics_2D_ver1 {
 
 	public static void main(String[] args) {
 		// Make sure GUI is created on the event dispatching thread.
