@@ -4,7 +4,7 @@ Create and design a simple graphical user interfaces with support for event-driv
 Create a simple file management system to manipulate text files.
 Create sustainable components custom exception management and interfaces.
 The steps used here are by no means an optimal solution. However, it is a solution that maybe of some use.
-<br>Note: I dont mind you using my code for various reasons like in a course assignment. Just remember that you are not the first person to discover it.
+<br>Note: I dont mind you using my code (in a Uni. course assignment) just remember that you are not the first person to discover it.
 
 Step 1:
 ===
